@@ -1,0 +1,15 @@
+/out
+/.gradle
+/gradle
+/.idea/workspace.xml
+/.idea/dictionaries
+/.idea/libraries
+/.idea/modules
+/.idea/compiler.xml
+/.idea/eclipseCodeFormatter.xml
+/.idea/gradle.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/uiDesigner.xml
+/.idea/vcs.xml
+/.idea/google-java-format.xml
