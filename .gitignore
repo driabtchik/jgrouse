@@ -13,3 +13,5 @@
 /.idea/uiDesigner.xml
 /.idea/vcs.xml
 /.idea/google-java-format.xml
+build
+sonarlint
