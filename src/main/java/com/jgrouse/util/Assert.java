@@ -1,13 +1,12 @@
 package com.jgrouse.util;
 
-import static com.jgrouse.util.StringUtils.interpolate;
-
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.validation.constraints.NotNull;
+import static com.jgrouse.util.StringUtils.interpolate;
 
 @SuppressWarnings("UnusedReturnValue")
 public interface Assert {
@@ -64,7 +63,7 @@ public interface Assert {
   static <T extends Collection> T notNullElements(@NotNull final T expr,
                                                   @NotNull Function<Integer, String> messageSupplierForNullElement) {
     notNull(expr, "Collection must be provided");
-    int[] i = { 0 };
+    int[] i = {0};
     for (Object o : expr) {
       notNull(o, () -> messageSupplierForNullElement.apply(i[0]));
       i[0]++;

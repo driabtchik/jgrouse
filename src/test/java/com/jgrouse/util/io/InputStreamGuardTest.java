@@ -1,15 +1,15 @@
 package com.jgrouse.util.io;
 
-import static com.jgrouse.util.io.InputStreamGuard.withInputStream;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
+import org.mockito.InOrder;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Test;
-import org.mockito.InOrder;
+import static com.jgrouse.util.io.InputStreamGuard.withInputStream;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 public class InputStreamGuardTest {
 
@@ -32,8 +32,8 @@ public class InputStreamGuardTest {
   public void testWithInputStream_errorInStreamCreation() throws IOException {
     when(inputStreamSupplier.get()).thenThrow(new IOException(THIS_IS_ERROR_MESSAGE));
     assertThatThrownBy(() -> withInputStream(inputStreamSupplier, inputStreamFunction))
-                                                                                       .isInstanceOf(IoRuntimeException.class)
-                                                                                       .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
+        .isInstanceOf(IoRuntimeException.class)
+        .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
     order.verify(inputStreamSupplier).get();
     order.verifyNoMoreInteractions();
   }
@@ -54,8 +54,8 @@ public class InputStreamGuardTest {
     when(inputStreamSupplier.get()).thenReturn(inputStream);
     when(inputStreamFunction.apply(inputStream)).thenThrow(new IOException(THIS_IS_ERROR_MESSAGE));
     assertThatThrownBy(() -> withInputStream(inputStreamSupplier, inputStreamFunction))
-                                                                                       .isInstanceOf(IoRuntimeException.class)
-                                                                                       .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
+        .isInstanceOf(IoRuntimeException.class)
+        .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
     verify(inputStream).close();
   }
 

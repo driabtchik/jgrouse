@@ -1,12 +1,12 @@
 package com.jgrouse.util.collections;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
+import org.assertj.core.data.MapEntry;
+import org.junit.Test;
 
 import java.util.TreeMap;
 
-import org.assertj.core.data.MapEntry;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
 
 public class MapBuilderTest {
 
@@ -18,8 +18,8 @@ public class MapBuilderTest {
   @Test
   public void testMap() {
     assertThat(new MapBuilder<>().map("foo", 42).map("bar", 77).build())
-                                                                        .containsOnly(entry("foo", 42),
-                                                                                      entry("bar", 77));
+        .containsOnly(entry("foo", 42),
+            entry("bar", 77));
   }
 
   @Test

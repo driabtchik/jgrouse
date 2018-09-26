@@ -1,4 +1,4 @@
-package com.jgrouse.util;
+package com.jgrouse.util.collections;
 
 import java.util.Comparator;
 import java.util.Spliterator;
@@ -16,7 +16,7 @@ public class BreakingSpliterator<T> implements Spliterator<T> {
 
   @Override
   public boolean tryAdvance(Consumer<? super T> action) {
-    boolean[] interrupted = { false };
+    boolean[] interrupted = {false};
     boolean res = delegate.tryAdvance(t -> {
       if (circuitBreaker.test(t)) {
         action.accept(t);

@@ -1,12 +1,12 @@
 package com.jgrouse.util.stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
 
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 public class StreamGuardTest {
 
@@ -15,7 +15,7 @@ public class StreamGuardTest {
   @Test
   public void testConsume() {
     Stream<String> stream = Stream.of("foo", "bar").onClose(() -> streamClosed = true);
-    assertThat(new StreamGuard<>(stream).<Long> consume(Stream::count)).isEqualTo(2);
+    assertThat(new StreamGuard<>(stream).<Long>consume(Stream::count)).isEqualTo(2);
     assertThat(streamClosed).isTrue();
   }
 

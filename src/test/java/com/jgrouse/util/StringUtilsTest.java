@@ -1,10 +1,10 @@
 package com.jgrouse.util;
 
+import org.junit.Test;
+
 import static com.jgrouse.util.StringUtils.interpolate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import org.junit.Test;
 
 public class StringUtilsTest {
 

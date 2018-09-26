@@ -1,14 +1,14 @@
 package com.jgrouse.util.io;
 
+import org.junit.Test;
+
+import java.io.IOException;
+
 import static com.jgrouse.util.io.IoRuntimeException.asUnchecked;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import java.io.IOException;
-
-import org.junit.Test;
 
 public class IoRuntimeExceptionTest {
 
@@ -27,8 +27,8 @@ public class IoRuntimeExceptionTest {
     };
 
     assertThatThrownBy(() -> asUnchecked(supplierWithException))
-                                                                .isInstanceOf(IoRuntimeException.class)
-                                                                .hasMessageContaining(THIS_IS_ERROR);
+        .isInstanceOf(IoRuntimeException.class)
+        .hasMessageContaining(THIS_IS_ERROR);
   }
 
   @Test
@@ -44,7 +44,7 @@ public class IoRuntimeExceptionTest {
       throw new IOException(THIS_IS_ERROR);
     };
     assertThatThrownBy(() -> IoRuntimeException.asUnchecked(runnable))
-                                                                      .isInstanceOf(IoRuntimeException.class)
-                                                                      .hasMessageContaining(THIS_IS_ERROR);
+        .isInstanceOf(IoRuntimeException.class)
+        .hasMessageContaining(THIS_IS_ERROR);
   }
 }

@@ -4,7 +4,8 @@ import java.io.IOException;
 
 @SuppressWarnings("WeakerAccess")
 public class IoRuntimeException extends RuntimeException {
-  public IoRuntimeException() {}
+  public IoRuntimeException() {
+  }
 
   public IoRuntimeException(String message) {
     super(message);
