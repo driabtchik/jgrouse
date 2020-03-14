@@ -8,24 +8,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StringUtilsTest {
 
-  @Test
-  public void testInterpolate() {
+    @Test
+    public void testInterpolate() {
 
-    // noinspection ConstantConditions false alarm
-    assertThatThrownBy(() -> interpolate(null, "foo")).isInstanceOf(AssertionException.class);
+        // noinspection ConstantConditions false alarm
+        assertThatThrownBy(() -> interpolate(null, "foo")).isInstanceOf(AssertionException.class);
 
-    String foo = "foo {} {}";
-    assertThat(interpolate(foo)).isSameAs(foo);
-    assertThat(interpolate(foo, (Object[]) null)).isSameAs(foo);
+        String foo = "foo {} {}";
+        assertThat(interpolate(foo)).isSameAs(foo);
+        assertThat(interpolate(foo, (Object[]) null)).isSameAs(foo);
 
-    assertThat(interpolate(foo, "bar", "baz")).isEqualTo("foo bar baz");
+        assertThat(interpolate(foo, "bar", "baz")).isEqualTo("foo bar baz");
 
-    assertThat(interpolate(" {}{}", "foo", "bar")).isEqualTo(" foobar");
-    assertThat(interpolate(" {}", "bar")).isEqualTo(" bar");
-    assertThat(interpolate("{} ", "bar")).isEqualTo("bar ");
-    assertThat(interpolate(" {} ", "bar")).isEqualTo(" bar ");
-    assertThat(interpolate(" {} ", (String) null)).isEqualTo(" null ");
+        assertThat(interpolate(" {}{}", "foo", "bar")).isEqualTo(" foobar");
+        assertThat(interpolate(" {}", "bar")).isEqualTo(" bar");
+        assertThat(interpolate("{} ", "bar")).isEqualTo("bar ");
+        assertThat(interpolate(" {} ", "bar")).isEqualTo(" bar ");
+        assertThat(interpolate(" {} ", (String) null)).isEqualTo(" null ");
 
-  }
+    }
 
 }

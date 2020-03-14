@@ -4,5 +4,5 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface IoExceptionAwareRunnable {
-  void run() throws IOException;
+    void run() throws IOException;
 }

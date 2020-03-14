@@ -4,5 +4,5 @@ import java.io.IOException;
 
 @FunctionalInterface
 public interface IoExceptionAwareSupplier<T> {
-  T get() throws IOException;
+    T get() throws IOException;
 }
