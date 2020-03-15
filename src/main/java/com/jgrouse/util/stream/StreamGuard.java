@@ -14,8 +14,8 @@ public class StreamGuard<T> {
         this.stream = stream;
     }
 
-    public <R extends AutoCloseable> StreamGuard(Supplier<R> resourceSupplier,
-                                                 Function<Supplier<R>, Stream<T>> streamGenerator) {
+    private <R extends AutoCloseable> StreamGuard(Supplier<R> resourceSupplier,
+                                                  Function<Supplier<R>, Stream<T>> streamGenerator) {
         ResourceGuard<R> guard = new ResourceGuard<>(resourceSupplier);
         boolean ok = false;
         try {
@@ -28,6 +28,17 @@ public class StreamGuard<T> {
             }
         }
     }
+
+    public static <R extends AutoCloseable, T> StreamGuard<T> withLazyStreamGenerator(Supplier<R> resourceSupplier,
+                                                                                      Function<Supplier<R>, Stream<T>> streamGenerator) {
+        return new StreamGuard<>(resourceSupplier, streamGenerator);
+    }
+
+    public static <R extends AutoCloseable, T> StreamGuard<T> withEagerStreamGenerator(Supplier<R> resourceSupplier,
+                                                                                       Function<R, Stream<T>> streamGenerator) {
+        return new StreamGuard<>(resourceSupplier, rSupplier -> streamGenerator.apply(resourceSupplier.get()));
+    }
+
 
     public <R> R consume(Function<Stream<T>, R> consumer) {
         try {
