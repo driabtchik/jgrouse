@@ -1,6 +1,6 @@
 package com.jgrouse.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.jgrouse.util.StringUtils.interpolate;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class StringUtilsTest {
 
     @Test
-    public void testInterpolate() {
+    void testInterpolate() {
 
         // noinspection ConstantConditions false alarm
         assertThatThrownBy(() -> interpolate(null, "foo")).isInstanceOf(AssertionException.class);

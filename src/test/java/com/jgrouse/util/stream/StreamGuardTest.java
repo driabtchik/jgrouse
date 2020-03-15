@@ -1,6 +1,6 @@
 package com.jgrouse.util.stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
@@ -13,14 +13,14 @@ public class StreamGuardTest {
     private boolean streamClosed;
 
     @Test
-    public void testConsume() {
+    void consume() {
         Stream<String> stream = Stream.of("foo", "bar").onClose(() -> streamClosed = true);
         assertThat(new StreamGuard<>(stream).<Long>consume(Stream::count)).isEqualTo(2);
         assertThat(streamClosed).isTrue();
     }
 
     @Test
-    public void testConstruct_fromResourceAndStream_supplierWasCalled() throws Exception {
+    void construct_fromResourceAndStream_supplierWasCalled() throws Exception {
         AutoCloseable resource = mock(AutoCloseable.class);
         long res = new StreamGuard<>(() -> resource, supplier -> {
             supplier.get();
@@ -31,7 +31,7 @@ public class StreamGuardTest {
     }
 
     @Test
-    public void testConstruct_fromResourceAndStream_supplierWasNotCalled() throws Exception {
+    void construct_fromResourceAndStream_supplierWasNotCalled() throws Exception {
         AutoCloseable resource = mock(AutoCloseable.class);
         long res = new StreamGuard<>(() -> resource, supplier -> Stream.of("foo", "bar")).consume(Stream::count);
         assertThat(res).isEqualTo(2);
@@ -39,7 +39,7 @@ public class StreamGuardTest {
     }
 
     @Test
-    public void testConstruct_withExceptionInStreamCreation() throws Exception {
+    void construct_withExceptionInStreamCreation() throws Exception {
         AutoCloseable resource = mock(AutoCloseable.class);
         assertThatThrownBy(() -> new StreamGuard<>(() -> resource, supplier -> {
             supplier.get();

@@ -1,6 +1,7 @@
 package com.jgrouse.util.collections;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
@@ -11,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BreakingSpliteratorTest {
 
     @Test
-    public void testTryAdvance() {
+    void tryAdvance() {
         assertThat(stream(new BreakingSpliterator<>(asList(42, 15, 99, -4, 3).spliterator(), r -> r > 0), false))
                 .containsExactly(42, 15, 99);
         assertThat(stream(new BreakingSpliterator<>(asList(42, 15, 99, -4).spliterator(), r -> r > 0), false))
@@ -24,7 +25,7 @@ public class BreakingSpliteratorTest {
     }
 
     @Test
-    public void testTrySplit() {
+    void trySplit() {
         assertThat(new BreakingSpliterator<>(asList(1, 2).spliterator(), r -> true).trySplit()).isNull();
     }
 
