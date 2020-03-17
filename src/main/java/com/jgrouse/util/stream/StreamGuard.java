@@ -14,29 +14,19 @@ public class StreamGuard<T> {
         this.stream = stream;
     }
 
-    private <R extends AutoCloseable> StreamGuard(Supplier<R> resourceSupplier,
-                                                  Function<Supplier<R>, Stream<T>> streamGenerator) {
+    public static <R extends AutoCloseable, T> StreamGuard<T> guard(Supplier<R> resourceSupplier,
+                                                                    Function<R, Stream<T>> streamGenerator) {
         ResourceGuard<R> guard = new ResourceGuard<>(resourceSupplier);
-        boolean ok = false;
-        try {
-            Stream<T> localStream = streamGenerator.apply(guard);
-            this.stream = localStream.onClose(guard::close);
-            ok = true;
-        } finally {
-            if (!ok) {
-                guard.close();
-            }
-        }
+
+        Stream<T> stream = Stream.of(guard)
+                .onClose(guard::close)
+                .map(ResourceGuard::get)
+                .flatMap(streamGenerator);
+        return new StreamGuard<>(stream);
     }
 
-    public static <R extends AutoCloseable, T> StreamGuard<T> withLazyStreamGenerator(Supplier<R> resourceSupplier,
-                                                                                      Function<Supplier<R>, Stream<T>> streamGenerator) {
-        return new StreamGuard<>(resourceSupplier, streamGenerator);
-    }
-
-    public static <R extends AutoCloseable, T> StreamGuard<T> withEagerStreamGenerator(Supplier<R> resourceSupplier,
-                                                                                       Function<R, Stream<T>> streamGenerator) {
-        return new StreamGuard<>(resourceSupplier, rSupplier -> streamGenerator.apply(resourceSupplier.get()));
+    public <C> StreamGuard<C> transform(Function<Stream<T>, Stream<C>> transformer) {
+        return new StreamGuard<>(transformer.apply(this.stream).onClose(() -> this.stream.close()));
     }
 
 
