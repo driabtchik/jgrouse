@@ -8,9 +8,9 @@ import static com.jgrouse.util.Assert.isNull;
 
 public class StreamGuard<T> {
 
-    private Stream<T> stream;
+    private final Stream<T> stream;
 
-    StreamGuard(Stream<T> stream) {
+    private StreamGuard(Stream<T> stream) {
         this.stream = stream;
     }
 
@@ -26,7 +26,7 @@ public class StreamGuard<T> {
     }
 
     public <C> StreamGuard<C> transform(Function<Stream<T>, Stream<C>> transformer) {
-        return new StreamGuard<>(transformer.apply(this.stream).onClose(() -> this.stream.close()));
+        return new StreamGuard<>(transformer.apply(this.stream).onClose(this.stream::close));
     }
 
 
@@ -57,6 +57,7 @@ public class StreamGuard<T> {
             try {
                 if (resource != null) {
                     resource.close();
+                    resource = null;
                 }
             } catch (Exception e) {
                 throw new StreamGuardException(e);
