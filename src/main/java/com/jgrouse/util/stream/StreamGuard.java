@@ -14,8 +14,8 @@ public class StreamGuard<T> {
         this.stream = stream;
     }
 
-    public static <R extends AutoCloseable, T> StreamGuard<T> guard(Supplier<R> resourceSupplier,
-                                                                    Function<R, Stream<T>> streamGenerator) {
+    public static <R extends AutoCloseable, T> StreamGuard<T> guardResource(Supplier<R> resourceSupplier,
+                                                                            Function<R, Stream<T>> streamGenerator) {
         ResourceGuard<R> guard = new ResourceGuard<>(resourceSupplier);
 
         Stream<T> stream = Stream.of(guard)
@@ -23,6 +23,16 @@ public class StreamGuard<T> {
                 .map(ResourceGuard::get)
                 .flatMap(streamGenerator);
         return new StreamGuard<>(stream);
+    }
+
+    public static <R, S extends AutoCloseable & Supplier<R>, T> StreamGuard<T> guardResourceSupplier(S resourceSupplier,
+                                                                                                     Function<R, Stream<T>> streamGenerator) {
+        Stream<T> stream = Stream.of(resourceSupplier)
+                .onClose(() -> closeWithRethrow(resourceSupplier))
+                .map(Supplier::get)
+                .flatMap(streamGenerator);
+        return new StreamGuard<>(stream);
+
     }
 
     public <C> StreamGuard<C> transform(Function<Stream<T>, Stream<C>> transformer) {
@@ -35,6 +45,14 @@ public class StreamGuard<T> {
             return consumer.apply(stream);
         } finally {
             stream.close();
+        }
+    }
+
+    private static void closeWithRethrow(AutoCloseable autoCloseable) {
+        try {
+            autoCloseable.close();
+        } catch (Exception ex) {
+            throw new StreamGuardException(ex);
         }
     }
 
@@ -54,13 +72,9 @@ public class StreamGuard<T> {
         }
 
         void close() {
-            try {
-                if (resource != null) {
-                    resource.close();
-                    resource = null;
-                }
-            } catch (Exception e) {
-                throw new StreamGuardException(e);
+            if (resource != null) {
+                closeWithRethrow(resource);
+                resource = null;
             }
         }
     }
