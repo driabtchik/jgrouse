@@ -1,27 +1,33 @@
-group 'com.jgrouse'
-version '0.1.0-SNAPSHOT'
+import org.gradle.api.JavaVersion.VERSION_1_8
 
-apply plugin: 'java-library'
+plugins {
+    `java-library`
+}
 
-sourceCompatibility = 1.8
+group = "com.jgrouse"
+version = "0.1.0-SNAPSHOT"
+
+java {
+    sourceCompatibility = VERSION_1_8
+}
 
 repositories {
     mavenCentral()
     jcenter()
 }
 
-test {
+tasks.test {
     useJUnitPlatform()
 }
 
 dependencies {
-    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    implementation("javax.validation:validation-api:2.0.1.Final")
+    implementation("org.apache.commons:commons-lang3:3.9")
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.6.0")
 
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.3.0'
+    testImplementation("org.assertj:assertj-core:3.15.0")
+    testImplementation("org.mockito:mockito-core:3.3.0")
 
 }
