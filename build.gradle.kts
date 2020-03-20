@@ -2,10 +2,14 @@ import org.gradle.api.JavaVersion.VERSION_1_8
 
 plugins {
     `java-library`
+    id("pl.allegro.tech.build.axion-release") version "1.11.0"
+}
+
+scmVersion {
 }
 
 group = "com.jgrouse"
-version = "0.1.0-SNAPSHOT"
+version = scmVersion.version
 
 java {
     sourceCompatibility = VERSION_1_8
