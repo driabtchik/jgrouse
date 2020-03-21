@@ -16,3 +16,4 @@ build
 sonarlint
 /.idea/jarRepositories.xml
 /.idea/jgrouse-utils.iml
+/.idea/kotlinScripting.xml
