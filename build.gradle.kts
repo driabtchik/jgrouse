@@ -88,7 +88,7 @@ bintray {
     pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig>{
         repo = "jGrouse"
         name = "jgrouse-utils"
-        userOrg = "jGrouse"
+        userOrg = "jgrouse"
         vcsUrl = "https://github.com/driabtchik/jgrouse-utils.git"
         setLabels("java")
         setLicenses("Apache-2.0")
