@@ -28,6 +28,7 @@ jobs:
       if: failure()
       shell: bash
       run:  |
+        pwd
         tar cvfz test-results.tar.gz reports/*.*
     - uses: actions/upload-artifact@v1
       if: failure()
