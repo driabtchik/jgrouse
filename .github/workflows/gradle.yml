@@ -24,16 +24,6 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: Archive test results if Gradle build failed
-      if: failure()
-      shell: bash
-      run:  |
-        tar cvfz build/test-results.tar.gz build/reports
-    - uses: actions/upload-artifact@v1
-      if: failure()
-      with:
-        name: test-results.tar.gz
-        path: build/test-results.tar.gz
     - uses: actions/upload-artifact@v1
       if: failure()
       with:
