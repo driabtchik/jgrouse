@@ -30,7 +30,8 @@ public class StreamGuard<T> {
         @SuppressWarnings("Convert2MethodRef")
         Stream<T> stream = Stream.of(resourceSupplier)
                 .onClose(() -> closeWithRethrow(resourceSupplier))
-                .map(r -> r.get()) //Do not convert r.get to method reference due to a bug in JDK 1.8 compiler
+                .map(Supplier::get)
+                //.map(r -> r.get()) //Do not convert r.get to method reference due to a bug in JDK 1.8 compiler
                 .flatMap(streamGenerator);
         return new StreamGuard<>(stream);
 
