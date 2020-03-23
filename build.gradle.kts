@@ -3,6 +3,7 @@ import org.gradle.api.JavaVersion.VERSION_1_8
 plugins {
     `java-library`
     `maven-publish`
+    jacoco
     id("pl.allegro.tech.build.axion-release") version "1.11.0"
     id("com.jfrog.bintray") version "1.8.4"
 }
@@ -21,12 +22,30 @@ java {
 }
 
 repositories {
-    mavenCentral()
     jcenter()
+    mavenCentral()
+}
+
+
+jacoco {
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.9".toBigDecimal()
+            }
+        }
+    }
 }
 
 tasks.test {
     useJUnitPlatform()
+    extensions.configure(JacocoTaskExtension::class) {
+    }
+    finalizedBy(tasks.jacocoTestReport)
+    finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
 
