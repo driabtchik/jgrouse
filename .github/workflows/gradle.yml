@@ -24,3 +24,13 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build --console=plain -i
+    - name: Gradle Build failed
+      if: failure()
+      shell: bash
+      run:  |
+        tar cvfz test-results.tar.gz reports/*
+    - uses: actions/upload-artifact@v1
+      if: failure()
+      with:
+        name: test-results.tar.gz
+        path: test-results.tar
