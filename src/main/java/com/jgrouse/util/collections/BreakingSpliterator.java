@@ -44,17 +44,18 @@ public class BreakingSpliterator<T> implements Spliterator<T> {
 
     @Override
     public long getExactSizeIfKnown() {
-        return delegate.getExactSizeIfKnown();
+        return -1L;
     }
 
     @Override
     public int characteristics() {
-        return delegate.characteristics();
+        return delegate.characteristics() & ~(Spliterator.SIZED | Spliterator.SUBSIZED);
     }
 
     @Override
     public boolean hasCharacteristics(int characteristics) {
-        return delegate.hasCharacteristics(characteristics);
+        return delegate.hasCharacteristics(characteristics)
+                && ((characteristics & (Spliterator.SIZED | Spliterator.SUBSIZED)) == 0);
     }
 
     @Override

@@ -72,6 +72,18 @@ class StreamGuardTest {
         }
     }
 
+    @Test
+    void closingOfResourceThrowsException() throws Exception {
+        AutoCloseable closeable = mock(AutoCloseable.class);
+        doAnswer(x -> {
+            throw new IllegalArgumentException("forcing error");
+        }).when(closeable).close();
+        assertThatExceptionOfType(StreamGuardException.class).isThrownBy(() ->
+        guardResource(() -> closeable, c -> Stream.of("foo", "bar")).consume(Stream::count)
+        ).satisfies(ex -> assertThat(ex.getMessage()).contains("forcing error"));
+        verify(closeable).close();
+    }
+
 
     @Test
     void constructionOfGuardShouldNotCreateResourceIfNotConsumed() {

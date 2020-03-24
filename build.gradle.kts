@@ -33,8 +33,11 @@ jacoco {
 tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
+            excludes = listOf(
+                    "com.jgrouse.util.io.IoRuntimeException"
+            )
             limit {
-                minimum = "0.8".toBigDecimal()
+                minimum = "0.9".toBigDecimal()
             }
         }
     }
