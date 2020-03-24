@@ -51,6 +51,12 @@ tasks.test {
     finalizedBy(tasks.jacocoTestCoverageVerification)
 }
 
+tasks.jacocoTestReport {
+    reports {
+        xml.isEnabled = true
+    }
+}
+
 
 dependencies {
     val junitVer = "5.6.0"
