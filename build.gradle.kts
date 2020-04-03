@@ -57,6 +57,13 @@ tasks.jacocoTestReport {
     }
 }
 
+tasks.register("publishIfRelease") {
+    dependsOn("build")
+    if (scmVersion.version.contains("SNAPSHOT")) {
+        println("this is snapshot")
+    }
+}
+
 
 dependencies {
     val junitVer = "5.6.0"
