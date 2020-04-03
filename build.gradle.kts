@@ -57,10 +57,9 @@ tasks.jacocoTestReport {
     }
 }
 
-tasks.register("publishIfRelease") {
-    dependsOn("build")
-    if (scmVersion.version.contains("SNAPSHOT")) {
-        println("this is snapshot")
+if (!scmVersion.version.contains("SNAPSHOT")) {
+    tasks.build {
+        finalizedBy(tasks.bintrayUpload)
     }
 }
 
