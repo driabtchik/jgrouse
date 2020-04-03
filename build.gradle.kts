@@ -6,6 +6,7 @@ plugins {
     jacoco
     id("pl.allegro.tech.build.axion-release") version "1.11.0"
     id("com.jfrog.bintray") version "1.8.4"
+    id("org.ajoberstar.grgit") version "3.1.1"
 }
 
 scmVersion {
@@ -57,8 +58,11 @@ tasks.jacocoTestReport {
     }
 }
 
-if (!scmVersion.version.contains("SNAPSHOT")) {
-    tasks.build {
+tasks.register("ciBuild") {
+    dependsOn("build")
+    val grGit = org.ajoberstar.grgit.Grgit.open(mapOf("dir" to project.rootDir))
+    val isClean = grGit.status().isClean
+    if (isClean && !scmVersion.version.contains("SNAPSHOT")) {
         finalizedBy(tasks.bintrayUpload)
     }
 }
