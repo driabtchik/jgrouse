@@ -25,10 +25,10 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew ciBuild
       env:
         bintrayUser: {{ secrets.bintrayUser }}
         bintrayKey: {{ secrets.bintrayKey }}
+      run: ./gradlew ciBuild
     - uses: actions/upload-artifact@v1
       if: failure()
       with:
