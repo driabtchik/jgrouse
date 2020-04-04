@@ -104,8 +104,8 @@ publishing {
                         appendNode("organizationUrl", "http://jGrouse.com")
                     }
                     appendNode("scm").apply {
-                        appendNode("connection", "scm:git:git://github.com/driabtchik/jgrouse-utils.git")
-                        appendNode("developerConnection", "scm:git:ssh://github.com/driabtchik/jgrouse-utils.git")
+                        appendNode("connection", "scm:git:git://github.com/driabtchik/jgrouse.git")
+                        appendNode("developerConnection", "scm:git:ssh://github.com/driabtchik/jgrouse.git")
                         appendNode("url", "https://github.com/driabtchik/jgrouse-utils")
                     }
                 }
@@ -127,7 +127,7 @@ bintray {
         repo = "jGrouse"
         name = "jgrouse-utils"
         userOrg = "jgrouse"
-        vcsUrl = "https://github.com/driabtchik/jgrouse-utils.git"
+        vcsUrl = "https://github.com/driabtchik/jgrouse.git"
         setLabels("java")
         setLicenses("Apache-2.0")
     })
