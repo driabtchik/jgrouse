@@ -142,5 +142,4 @@ public class AssertTest {
                 .isInstanceOf(AssertionException.class)
                 .hasMessage("foobar");
     }
-
 }
