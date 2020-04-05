@@ -91,7 +91,7 @@ publishing {
                 asNode().apply {
                     appendNode("name", "jGrouse Utils")
                     appendNode("description", "Useful utilities from jGrouse")
-                    appendNode("url", "https://github.com/driabtchik/jgrouse-utils")
+                    appendNode("url", "https://github.com/driabtchik/jgrouse/utils")
                     appendNode("licenses").appendNode("license").apply {
                         appendNode("name", "The Apache Software License, Version 2.0")
                         appendNode("url", "http://www.apache.org/licenses/LICENSE-2.0.txt")
@@ -106,7 +106,7 @@ publishing {
                     appendNode("scm").apply {
                         appendNode("connection", "scm:git:git://github.com/driabtchik/jgrouse.git")
                         appendNode("developerConnection", "scm:git:ssh://github.com/driabtchik/jgrouse.git")
-                        appendNode("url", "https://github.com/driabtchik/jgrouse-utils")
+                        appendNode("url", "https://github.com/driabtchik/jgrouse/utils")
                     }
                 }
             }
