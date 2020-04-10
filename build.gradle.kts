@@ -75,6 +75,7 @@ subprojects {
     tasks.named<JacocoReport>("jacocoTestReport") {
         reports {
             xml.isEnabled = true
+            xml.destination = file("${rootProject.buildDir}/reports/jacoco/test/${project.name}.jacocoTestReport.xml")
         }
     }
 

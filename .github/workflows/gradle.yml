@@ -38,4 +38,5 @@ jobs:
       if: success()
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        file: '*/jacocoTestReport.xml'
+        file: './build/reports/jacoco/test/*.jacocoTestReport.xml
+'
