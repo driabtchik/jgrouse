@@ -14,12 +14,14 @@ allprojects {
         jcenter()
         mavenCentral()
     }
+
 }
 
 
 scmVersion {}
 
 tasks.register<JacocoReport>("jacocoRootTestReport") {
+
 }
 
 tasks.named("jar") {
@@ -36,6 +38,12 @@ fun artifactUploadAllowed(): Boolean {
     return (isClean && !scmVersion.version.contains("SNAPSHOT"))
 }
 
+tasks.register<TestReport>("testReport") {
+}
+
+tasks.named("build") {
+    finalizedBy("testReport")
+}
 
 subprojects {
     apply(plugin = "java-library")
@@ -71,8 +79,6 @@ subprojects {
                 testImplementation("org.junit.jupiter:junit-jupiter:${junitVer}")
                 testImplementation("org.assertj:assertj-core:3.15.0")
                 testImplementation("org.mockito:mockito-core:3.3.0")
-
-
             }
         }
     }
@@ -80,18 +86,21 @@ subprojects {
 
     version = rootProject.scmVersion.version
 
-    val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
-
-    rootJacocoReport.sourceSets(sourceSets.main.get())
-    rootJacocoReport.sourceSets(sourceSets.test.get())
+    val rootTestReport = rootProject.tasks.getByName<TestReport>("testReport")
 
     tasks.named<Test>("test") {
         useJUnitPlatform()
         extensions.configure(JacocoTaskExtension::class) {
         }
+
+        reports.html.isEnabled = false
+
         finalizedBy(tasks.named("jacocoTestReport"))
         finalizedBy(tasks.named("jacocoTestCoverageVerification"))
+        finalizedBy(rootTestReport.path)
+        rootTestReport.reportOn(binaryResultsDirectory)
     }
+
 
     tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
         violationRules {
@@ -113,6 +122,9 @@ subprojects {
         }
     }
 
+    val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
+    rootJacocoReport.sourceSets(sourceSets.main.get())
+    rootJacocoReport.sourceSets(sourceSets.test.get())
     rootJacocoReport.dependsOn(project.tasks.build)
 
     val rootArtifactsUpload = rootProject.tasks.getByName("artifactsUpload")
@@ -129,6 +141,9 @@ subprojects {
 
 }
 
+tasks.named<TestReport>("testReport") {
+    destinationDir = file("$buildDir/reports/allTests")
+}
 
 
 tasks.register("ciBuild") {
