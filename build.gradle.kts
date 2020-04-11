@@ -22,6 +22,10 @@ scmVersion {}
 tasks.register<JacocoReport>("jacocoRootTestReport") {
 }
 
+tasks.named("jar") {
+    enabled = false
+}
+
 tasks.register("artifactsUpload") {
     dependsOn("build")
 }
