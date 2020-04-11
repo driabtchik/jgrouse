@@ -1,6 +1,8 @@
 import org.gradle.api.JavaVersion.VERSION_1_8
 
 plugins {
+    java
+    jacoco
     id("pl.allegro.tech.build.axion-release") version "1.11.0"
     id("com.jfrog.bintray") version "1.8.5"
     id("org.ajoberstar.grgit") version "3.1.1" apply false
@@ -14,7 +16,12 @@ allprojects {
     }
 }
 
+
 scmVersion {}
+
+tasks.register<JacocoReport>("jacocoRootTestReport") {
+
+}
 
 subprojects {
     apply(plugin = "java-library")
@@ -51,6 +58,10 @@ subprojects {
 
     version = scmVersion.version
 
+    val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
+
+    rootJacocoReport.sourceSets(sourceSets.main.get())
+
     tasks.named<Test>("test") {
         useJUnitPlatform()
         extensions.configure(JacocoTaskExtension::class) {
@@ -72,12 +83,14 @@ subprojects {
         }
     }
 
+
     tasks.named<JacocoReport>("jacocoTestReport") {
         reports {
             xml.isEnabled = true
-            xml.destination = file("${rootProject.buildDir}/reports/jacoco/test/${project.name}.jacocoTestReport.xml")
         }
     }
+
+    rootJacocoReport.dependsOn(project.tasks.build)
 
     tasks.register("artifactsUpload") {
         dependsOn("build")
@@ -88,6 +101,7 @@ subprojects {
         }
     }
 
+
     ext["uploadAllowed"] = true
 }
 
@@ -97,6 +111,34 @@ tasks.register("artifactsUpload") {
 tasks.register("ciBuild") {
     dependsOn("artifactsUpload")
 }
+
+tasks.named("build") {
+    finalizedBy("jacocoRootTestReport")
+}
+
+tasks.named<JacocoReport>("jacocoRootTestReport") {
+    reports {
+        xml.isEnabled = true
+        xml.destination = file("${buildDir}/reports/jacoco/jacoco-jGrouse.xml")
+        html.isEnabled = false
+    }
+    executionData(fileTree(rootProject.rootDir).include("/*/build/jacoco/*.exec"))
+
+}
+
+//tasks.register<JacocoReport>("applicationCodeCoverageReport") {
+//    val athis = this
+//    subprojects.forEach {
+//        println("here")
+//        athis.dependsOn(tasks.named("jacocoTestReport"))
+//        athis.executionData(tasks.jacocoTestReport.get())
+//        athis.sourceSets(sourceSets.main.get())
+//    }
+//
+//    reports {
+//        xml.isEnabled = true
+//    }
+//}
 
 
 fun artifactUploadAllowed(): Boolean {
