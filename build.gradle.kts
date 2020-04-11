@@ -57,6 +57,7 @@ subprojects {
     ext["uploadAllowed"] = artifactUploadAllowed()
 
 
+
     plugins.withType<JavaLibraryPlugin> {
         extensions.configure<JavaPluginExtension> {
             sourceCompatibility = VERSION_1_8
@@ -83,6 +84,11 @@ subprojects {
         }
     }
 
+    tasks.withType<Jar> {
+        archiveBaseName.set("jgrouse-${project.name}")
+    }
+
+
 
     version = rootProject.scmVersion.version
 
@@ -90,15 +96,14 @@ subprojects {
 
     tasks.named<Test>("test") {
         useJUnitPlatform()
+        reports.html.isEnabled = false
+        rootTestReport.reportOn(binaryResultsDirectory)
+
         extensions.configure(JacocoTaskExtension::class) {
         }
-
-        reports.html.isEnabled = false
-
         finalizedBy(tasks.named("jacocoTestReport"))
         finalizedBy(tasks.named("jacocoTestCoverageVerification"))
         finalizedBy(rootTestReport.path)
-        rootTestReport.reportOn(binaryResultsDirectory)
     }
 
 
