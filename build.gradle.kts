@@ -20,8 +20,18 @@ allprojects {
 scmVersion {}
 
 tasks.register<JacocoReport>("jacocoRootTestReport") {
-
 }
+
+tasks.register("artifactsUpload") {
+    dependsOn("build")
+}
+
+fun artifactUploadAllowed(): Boolean {
+    val grGit = org.ajoberstar.grgit.Grgit.open(mapOf("dir" to project.rootDir))
+    val isClean = grGit.status().isClean
+    return (isClean && !scmVersion.version.contains("SNAPSHOT"))
+}
+
 
 subprojects {
     apply(plugin = "java-library")
@@ -31,6 +41,8 @@ subprojects {
     apply(plugin = "jacoco")
     apply(plugin = "com.jfrog.bintray")
     apply(plugin = "org.ajoberstar.grgit")
+
+    ext["uploadAllowed"] = artifactUploadAllowed()
 
 
     plugins.withType<JavaLibraryPlugin> {
@@ -92,6 +104,7 @@ subprojects {
 
     rootJacocoReport.dependsOn(project.tasks.build)
 
+    val rootArtifactsUpload = rootProject.tasks.getByName("artifactsUpload")
     tasks.register("artifactsUpload") {
         dependsOn("build")
         if (ext["uploadAllowed"] as Boolean) {
@@ -101,14 +114,11 @@ subprojects {
             logger.info("No released artifacts are eligible for upload for ${project.name}")
         }
     }
+    rootArtifactsUpload.dependsOn("${project.name}:artifactsUpload")
 
-
-    ext["uploadAllowed"] = true
 }
 
-tasks.register("artifactsUpload") {
-    dependsOn("build")
-}
+
 
 tasks.register("ciBuild") {
     dependsOn("artifactsUpload")
@@ -127,12 +137,3 @@ tasks.named<JacocoReport>("jacocoRootTestReport") {
     executionData(fileTree(rootProject.rootDir).include("/*/build/jacoco/*.exec"))
 
 }
-
-
-
-fun artifactUploadAllowed(): Boolean {
-    val grGit = org.ajoberstar.grgit.Grgit.open(mapOf("dir" to project.rootDir))
-    val isClean = grGit.status().isClean
-    return (isClean && !scmVersion.version.contains("SNAPSHOT"))
-}
-
