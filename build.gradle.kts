@@ -161,7 +161,7 @@ tasks.named<JacocoReport>("jacocoRootTestReport") {
     reports {
         xml.isEnabled = true
         xml.destination = file("${buildDir}/reports/jacoco/jacoco-jGrouse.xml")
-        html.isEnabled = false
+        html.isEnabled = true
     }
     executionData(fileTree(rootProject.rootDir).include("/*/build/jacoco/*.exec"))
 
