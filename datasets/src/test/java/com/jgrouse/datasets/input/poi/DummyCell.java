@@ -137,7 +137,7 @@ public class DummyCell implements Cell {
 
     @Override
     public String getStringCellValue() {
-        isTrue(cellType == CellType.STRING || cellType == CellType.FORMULA, "invalid cell type");
+        isTrue(cellType == CellType.STRING || cellType == CellType.FORMULA, () -> "invalid cell type " + cellType);
         return String.valueOf(getNotNullValue());
     }
 

@@ -30,9 +30,10 @@ public class AssertTest {
     @Test
     public void testIsTrue() {
         isTrue(true, NOT_SUPPOSED_TO_BE_INVOKED_SUPPLIER);
+        isTrue(true, "this is irrelevant message");
         assertThatThrownBy(() -> isTrue(false, () -> EXPECTED_ERROR_MESSAGE))
-          .isInstanceOf(AssertionException.class)
-          .hasMessage(EXPECTED_ERROR_MESSAGE);
+                .isInstanceOf(AssertionException.class)
+                .hasMessage(EXPECTED_ERROR_MESSAGE);
 
         assertThatThrownBy(() -> isTrue(false, "foo {}", "bar"))
           .isInstanceOf(AssertionException.class)
@@ -42,9 +43,10 @@ public class AssertTest {
     @Test
     public void testIsFalse() {
         isFalse(false, NOT_SUPPOSED_TO_BE_INVOKED_SUPPLIER);
+        isFalse(false, "this is irrelevant message for interpolation");
         assertThatThrownBy(() -> isFalse(true, () -> EXPECTED_ERROR_MESSAGE))
-          .isInstanceOf(AssertionException.class)
-          .hasMessage(EXPECTED_ERROR_MESSAGE);
+                .isInstanceOf(AssertionException.class)
+                .hasMessage(EXPECTED_ERROR_MESSAGE);
 
         assertThatThrownBy(() -> isFalse(true, "foo{}", "bar"))
           .isInstanceOf(AssertionException.class)

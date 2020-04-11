@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.JDBCType;
 import java.util.List;
 
 import static com.jgrouse.util.io.InputStreamGuard.withInputStream;
@@ -62,7 +63,16 @@ class ConvertersTest {
     @Test
     void convertToString_tooLong() {
         Evaluator<String> evaluator = new Evaluator<>("strings", 5, 1);
-        assertThatExceptionOfType(DataSetValueOutOfRangeException.class).isThrownBy(evaluator::evaluate);
+        assertThatExceptionOfType(DataSetValueOutOfRangeException.class)
+                .isThrownBy(evaluator::evaluate)
+                .satisfies(ex -> {
+                    assertThat(ex).hasMessageContaining("is out of range");
+                    assertThat(ex.getColumn()).isEqualTo(1);
+                    assertThat(ex.getRow()).isEqualTo(5);
+                    assertThat(ex.getDatasetName()).isEqualTo("strings");
+                    assertThat(ex.getJdbcType()).isEqualTo(JDBCType.VARCHAR);
+                    assertThat(ex.getValue().toString()).contains("long string");
+                });
     }
 
     @ParameterizedTest

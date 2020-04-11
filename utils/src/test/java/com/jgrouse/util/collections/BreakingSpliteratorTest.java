@@ -4,14 +4,14 @@ package com.jgrouse.util.collections;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.StreamSupport.stream;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
 
 public class BreakingSpliteratorTest {
@@ -48,13 +48,13 @@ public class BreakingSpliteratorTest {
         assertThat(new BreakingSpliterator<>(asList(1, 2).spliterator(), r -> true).trySplit()).isNull();
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     void delegatesForEachRemaining() {
-        Spliterator<String> delegate = mock(Spliterator.class);
-        Consumer<String> consumer = mock(Consumer.class);
-        new BreakingSpliterator<>(delegate, r -> true).forEachRemaining(consumer);
-        verify(delegate).forEachRemaining(same(consumer));
+        Spliterator<Integer> delegate = asList(42, 44, -3, 2).spliterator();
+        Set<Integer> buffer = new HashSet<>();
+
+        new BreakingSpliterator<>(delegate, r -> r > 0).forEachRemaining(buffer::add);
+        assertThat(buffer).containsExactlyInAnyOrder(42, 44);
     }
 
     @SuppressWarnings("unchecked")

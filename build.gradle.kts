@@ -105,9 +105,7 @@ subprojects {
     tasks.named<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
         violationRules {
             rule {
-                excludes = listOf(
-                        "com.jgrouse.util.io.IoRuntimeException"
-                )
+                element = "CLASS"
                 limit {
                     minimum = "0.9".toBigDecimal()
                 }

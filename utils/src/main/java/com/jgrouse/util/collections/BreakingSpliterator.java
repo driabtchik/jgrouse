@@ -16,20 +16,15 @@ public class BreakingSpliterator<T> implements Spliterator<T> {
 
     @Override
     public boolean tryAdvance(Consumer<? super T> action) {
-        boolean[] interrupted = {false};
+        boolean[] accepted = {true};
         boolean res = delegate.tryAdvance(t -> {
             if (circuitBreaker.test(t)) {
                 action.accept(t);
             } else {
-                interrupted[0] = true;
+                accepted[0] = false;
             }
         });
-        return res || interrupted[0];
-    }
-
-    @Override
-    public void forEachRemaining(Consumer<? super T> action) {
-        delegate.forEachRemaining(action);
+        return res && accepted[0];
     }
 
     @Override
