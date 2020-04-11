@@ -55,7 +55,7 @@ subprojects {
     }
 
 
-    version = scmVersion.version
+    version = rootProject.scmVersion.version
 
     val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
 
