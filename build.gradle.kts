@@ -88,8 +88,6 @@ subprojects {
         archiveBaseName.set("jgrouse-${project.name}")
     }
 
-
-
     version = rootProject.scmVersion.version
 
     val rootTestReport = rootProject.tasks.getByName<TestReport>("testReport")
@@ -127,7 +125,6 @@ subprojects {
 
     val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
     rootJacocoReport.sourceSets(sourceSets.main.get())
-    rootJacocoReport.sourceSets(sourceSets.test.get())
     rootJacocoReport.dependsOn(project.tasks.build)
 
     val rootArtifactsUpload = rootProject.tasks.getByName("artifactsUpload")
