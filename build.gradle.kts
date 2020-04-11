@@ -106,6 +106,7 @@ subprojects {
 }
 
 tasks.register("artifactsUpload") {
+    dependsOn("build")
 }
 
 tasks.register("ciBuild") {
@@ -126,19 +127,6 @@ tasks.named<JacocoReport>("jacocoRootTestReport") {
 
 }
 
-//tasks.register<JacocoReport>("applicationCodeCoverageReport") {
-//    val athis = this
-//    subprojects.forEach {
-//        println("here")
-//        athis.dependsOn(tasks.named("jacocoTestReport"))
-//        athis.executionData(tasks.jacocoTestReport.get())
-//        athis.sourceSets(sourceSets.main.get())
-//    }
-//
-//    reports {
-//        xml.isEnabled = true
-//    }
-//}
 
 
 fun artifactUploadAllowed(): Boolean {
