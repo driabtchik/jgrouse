@@ -1,11 +1,9 @@
 package com.jgrouse.util.io;
 
-import javax.validation.constraints.NotNull;
+import com.jgrouse.util.ExceptionAwareSupplier;
+
 import java.io.IOException;
 import java.io.InputStream;
 
-@FunctionalInterface
-public interface InputStreamSupplier {
-  @NotNull
-  InputStream get() throws IOException;
+public interface InputStreamSupplier extends ExceptionAwareSupplier<InputStream, IOException> {
 }

@@ -11,7 +11,7 @@ public class StringUtilsTest {
     @Test
     void testInterpolate() {
 
-        // noinspection ConstantConditions false alarm
+        //noinspection ConstantConditions false alarm
         assertThatThrownBy(() -> interpolate(null, "foo")).isInstanceOf(AssertionException.class);
 
         String foo = "foo {} {}";

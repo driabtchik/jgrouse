@@ -7,7 +7,7 @@ public abstract class StringUtils {
     private static final String INTERPOLATION_TOKEN = "{}";
 
     private StringUtils() {
-        // NO-OP
+        //NO-OP
     }
 
     /**
@@ -27,8 +27,8 @@ public abstract class StringUtils {
      * @return original string if arguments were null or empty; otherwise interpolated string
      */
     @NotNull
-    @SuppressWarnings("squid:S2583") // needed to enforce the contract
-    static String interpolate(final @NotNull String pattern, final Object... args) {
+    @SuppressWarnings("squid:S2583") // enforcing the not-null contract
+    public static String interpolate(final @NotNull String pattern, final Object... args) {
         if (pattern == null) {
             throw new AssertionException("interpolation pattern must be not null");
         }

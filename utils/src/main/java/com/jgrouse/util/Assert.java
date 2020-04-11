@@ -83,13 +83,13 @@ public interface Assert {
     }
 
     @NotNull
-    static CharSequence notEmpty(final CharSequence expr, final @NotNull Supplier<String> messageSupplier) {
+    static <T extends CharSequence> T notEmpty(final T expr, final @NotNull Supplier<String> messageSupplier) {
         isTrue(expr != null && expr.length() > 0, messageSupplier);
         return expr;
     }
 
     @NotNull
-    static CharSequence notEmpty(final CharSequence expr, @NotNull final String pattern, final Object... args) {
+    static <T extends CharSequence> T notEmpty(final T expr, @NotNull final String pattern, final Object... args) {
         return notEmpty(expr, () -> interpolate(pattern, args));
     }
 

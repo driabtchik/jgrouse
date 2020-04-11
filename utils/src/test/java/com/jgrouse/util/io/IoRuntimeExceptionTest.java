@@ -1,5 +1,7 @@
 package com.jgrouse.util.io;
 
+import com.jgrouse.util.ExceptionAwareRunnable;
+import com.jgrouse.util.ExceptionAwareSupplier;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -10,41 +12,43 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+
 public class IoRuntimeExceptionTest {
 
     private static final String THIS_IS_ERROR = "this is error";
 
     @Test
-    void asUnchecked_withSupplier_noErrors() {
+    public void testAsUnchecked_withSupplier_noErrors() {
         String strValue = "foo";
         assertThat(IoRuntimeException.asUnchecked(() -> strValue)).isSameAs(strValue);
     }
 
     @Test
-    void asUnchecked_withSupplier_withException() {
-        IoExceptionAwareSupplier<String> supplierWithException = () -> {
+    public void testAsUnchecked_withSupplier_withException() {
+        ExceptionAwareSupplier<String, IOException> supplierWithException = () -> {
             throw new IOException(THIS_IS_ERROR);
         };
 
         assertThatThrownBy(() -> asUnchecked(supplierWithException))
-                .isInstanceOf(IoRuntimeException.class)
-                .hasMessageContaining(THIS_IS_ERROR);
+          .isInstanceOf(IoRuntimeException.class)
+          .hasMessageContaining(THIS_IS_ERROR);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    void asUnchecked_withRunnable_noError() throws IOException {
-        IoExceptionAwareRunnable runnable = mock(IoExceptionAwareRunnable.class);
+    public void testAsUnchecked_withRunnable_noError() throws IOException {
+        ExceptionAwareRunnable<IOException> runnable = mock(ExceptionAwareRunnable.class);
         IoRuntimeException.asUnchecked(runnable);
         verify(runnable).run();
     }
 
     @Test
-    void asUnchecked_withRunnable_withException() {
-        IoExceptionAwareRunnable runnable = () -> {
+    public void testAsUnchecked_withRunnable_withException() {
+        ExceptionAwareRunnable<IOException> runnable = () -> {
             throw new IOException(THIS_IS_ERROR);
         };
         assertThatThrownBy(() -> IoRuntimeException.asUnchecked(runnable))
-                .isInstanceOf(IoRuntimeException.class)
-                .hasMessageContaining(THIS_IS_ERROR);
+          .isInstanceOf(IoRuntimeException.class)
+          .hasMessageContaining(THIS_IS_ERROR);
     }
 }

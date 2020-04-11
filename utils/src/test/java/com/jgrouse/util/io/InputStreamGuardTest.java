@@ -1,5 +1,7 @@
 package com.jgrouse.util.io;
 
+
+import com.jgrouse.util.ExceptionAwareSupplier;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
@@ -18,7 +20,8 @@ public class InputStreamGuardTest {
     private final InputStream inputStream = mock(InputStream.class);
 
     @SuppressWarnings("unchecked")
-    private final IoExceptionAwareSupplier<InputStream> inputStreamSupplier = mock(IoExceptionAwareSupplier.class);
+    private final ExceptionAwareSupplier<InputStream, IOException> inputStreamSupplier =
+      mock(ExceptionAwareSupplier.class);
 
     private final InputStreamConsumer inputStreamConsumer = mock(InputStreamConsumer.class);
 
@@ -28,17 +31,17 @@ public class InputStreamGuardTest {
     private final InOrder order = inOrder(inputStream, inputStreamSupplier, inputStreamFunction, inputStreamConsumer);
 
     @Test
-    void withInputStream_errorInStreamCreation() throws IOException {
+    public void testWithInputStream_errorInStreamCreation() throws IOException {
         when(inputStreamSupplier.get()).thenThrow(new IOException(THIS_IS_ERROR_MESSAGE));
         assertThatThrownBy(() -> withInputStream(inputStreamSupplier, inputStreamFunction))
-                .isInstanceOf(IoRuntimeException.class)
-                .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
+          .isInstanceOf(IoRuntimeException.class)
+          .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
         order.verify(inputStreamSupplier).get();
         order.verifyNoMoreInteractions();
     }
 
     @Test
-    void withInputStream_normal() throws IOException {
+    public void testWithInputStream_normal() throws IOException {
         when(inputStreamSupplier.get()).thenReturn(inputStream);
         when(inputStreamFunction.apply(inputStream)).thenReturn(RESULT);
         String res = withInputStream(inputStreamSupplier, inputStreamFunction);
@@ -49,17 +52,17 @@ public class InputStreamGuardTest {
     }
 
     @Test
-    void withInputStream_errorInConsumer() throws IOException {
+    public void testWithInputStream_errorInConsumer() throws IOException {
         when(inputStreamSupplier.get()).thenReturn(inputStream);
         when(inputStreamFunction.apply(inputStream)).thenThrow(new IOException(THIS_IS_ERROR_MESSAGE));
         assertThatThrownBy(() -> withInputStream(inputStreamSupplier, inputStreamFunction))
-                .isInstanceOf(IoRuntimeException.class)
-                .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
+          .isInstanceOf(IoRuntimeException.class)
+          .hasMessageContaining(THIS_IS_ERROR_MESSAGE);
         verify(inputStream).close();
     }
 
     @Test
-    void withInputStream_withConsumer() throws IOException {
+    public void testWithInputStream_withConsumer() throws IOException {
         when(inputStreamSupplier.get()).thenReturn(inputStream);
         withInputStream(inputStreamSupplier, inputStreamConsumer);
         order.verify(inputStreamSupplier).get();

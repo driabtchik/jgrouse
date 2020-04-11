@@ -1,4 +1,4 @@
 rootProject.name = "jgrouse"
 
-include ("utils")
+include ("utils", "datasets")
 

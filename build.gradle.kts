@@ -58,14 +58,21 @@ subprojects {
 
             dependencies {
                 val junitVer = "5.6.0"
-                "implementation"("javax.validation:validation-api:2.0.1.Final")
-                "implementation"("org.apache.commons:commons-lang3:3.9")
+                val sl4jVer = "1.7.25"
+                implementation("javax.validation:validation-api:2.0.1.Final")
+                implementation("org.apache.commons:commons-lang3:3.9")
 
-                "testImplementation"("org.junit.jupiter:junit-jupiter-api:${junitVer}")
-                "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:${junitVer}")
+                implementation("org.slf4j:slf4j-api:${sl4jVer}")
+                implementation("org.slf4j:log4j-over-slf4j:${sl4jVer}")
 
-                "testImplementation"("org.assertj:assertj-core:3.15.0")
-                "testImplementation"("org.mockito:mockito-core:3.3.0")
+
+                testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVer}")
+                testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVer}")
+                testImplementation("org.junit.jupiter:junit-jupiter:${junitVer}")
+                testImplementation("org.assertj:assertj-core:3.15.0")
+                testImplementation("org.mockito:mockito-core:3.3.0")
+
+
             }
         }
     }
