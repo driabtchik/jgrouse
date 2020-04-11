@@ -11,7 +11,16 @@ val publishedArtifactDesc = ext["publishedArtifactDesc"]
 
 plugins.withType<MavenPublishPlugin> {
     extensions.configure<PublishingExtension> {
-
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/driabtchik/jgrouse")
+                credentials {
+                    username = project.findProperty("gprUser") as String? ?: System.getenv("GITHUB_ACTOR")
+                    password = project.findProperty("gprKey") as String? ?: System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
         publications {
             create<MavenPublication>("default") {
                 groupId = project.group as String

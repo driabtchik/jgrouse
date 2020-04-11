@@ -96,6 +96,7 @@ subprojects {
         dependsOn("build")
         if (ext["uploadAllowed"] as Boolean) {
             finalizedBy(tasks.getByName("bintrayUpload"))
+            finalizedBy(tasks.getByName("publish"))
         } else {
             logger.info("No released artifacts are eligible for upload for ${project.name}")
         }

@@ -28,6 +28,7 @@ jobs:
       env:
         ORG_GRADLE_PROJECT_bintrayUser: ${{ secrets.bintrayUser }}
         ORG_GRADLE_PROJECT_bintrayKey: ${{ secrets.bintrayKey }}
+        ORG_GRADLE_PROJECT_gprKey: ${{ secrets.GITHUB_TOKEN }}
       run: ./gradlew ciBuild
     - uses: actions/upload-artifact@v1
       if: failure()
