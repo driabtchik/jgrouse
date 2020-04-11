@@ -29,7 +29,6 @@ subprojects {
     apply(plugin = "maven-publish")
 
     apply(plugin = "jacoco")
-    apply(plugin = "pl.allegro.tech.build.axion-release")
     apply(plugin = "com.jfrog.bintray")
     apply(plugin = "org.ajoberstar.grgit")
 
