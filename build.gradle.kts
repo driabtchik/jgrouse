@@ -60,6 +60,7 @@ subprojects {
     val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
 
     rootJacocoReport.sourceSets(sourceSets.main.get())
+    rootJacocoReport.sourceSets(sourceSets.test.get())
 
     tasks.named<Test>("test") {
         useJUnitPlatform()
