@@ -33,12 +33,12 @@ public class PoiSheetInputDataSetTest {
     public void stream() {
 
         when(cellValueExtractor.getCellValue(isA(DummyCell.class))).thenAnswer(x -> {
-            DummyCell cell = x.getArgument(0);
-            Object rawValue = cell.rawValue();
+            final DummyCell cell = x.getArgument(0);
+            final Object rawValue = cell.rawValue();
             return rawValue instanceof Double ? ((Double) rawValue) + 1.0 : rawValue.toString() + "baz";
         });
 
-        PoiSheetInputDataSet dataSet = new PoiSheetInputDataSet(sheet,
+        final PoiSheetInputDataSet dataSet = new PoiSheetInputDataSet(sheet,
                 (ds, name) -> dataSetMetadata, ds -> cellValueExtractor);
 
         assertThat(dataSet.getMetadata()).isSameAs(dataSetMetadata);
@@ -47,7 +47,7 @@ public class PoiSheetInputDataSetTest {
                 Arrays.asList("barbaz", 18.0)
         );
 
-        ArgumentCaptor<DummyCell> processedCellsCaptor = ArgumentCaptor.forClass(DummyCell.class);
+        final ArgumentCaptor<DummyCell> processedCellsCaptor = ArgumentCaptor.forClass(DummyCell.class);
         verify(cellValueExtractor, times(4)).getCellValue(processedCellsCaptor.capture());
         assertThat(processedCellsCaptor.getAllValues().stream().map(DummyCell::rawValue).collect(Collectors.toList()))
                 .containsExactly("foo", 42.0, "bar", 17.0);
@@ -55,7 +55,7 @@ public class PoiSheetInputDataSetTest {
 
     @Test
     public void getHeader() {
-        PoiSheetInputDataSet dataSet = new PoiSheetInputDataSet(sheet,
+        final PoiSheetInputDataSet dataSet = new PoiSheetInputDataSet(sheet,
                 (ds, name) -> dataSetMetadata, ds -> cellValueExtractor);
         assertThat(dataSet.getHeaders()).containsExactly(HEADER_1, HEADER_2);
     }

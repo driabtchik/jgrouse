@@ -15,11 +15,11 @@ public class DummySheet implements Sheet {
     private final List<Row> rows;
     private Workbook workbook;
 
-    public DummySheet(String name, List<Row> rows) {
+    public DummySheet(final String name, final List<Row> rows) {
         this.name = name;
         this.rows = rows;
         int rowNum = 0;
-        for (Row row : rows) {
+        for (final Row row : rows) {
             if (row != null) {
                 ((DummyRow) row).fromSheet(this).fromRowNum(rowNum);
             }
@@ -28,28 +28,28 @@ public class DummySheet implements Sheet {
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public DummySheet fromWorkbook(Workbook workbook) {
+    public DummySheet fromWorkbook(final Workbook workbook) {
         this.workbook = workbook;
         return this;
     }
 
     @Override
-    public Row createRow(int rowNum) {
+    public Row createRow(final int rowNum) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeRow(Row row) {
+    public void removeRow(final Row row) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Row getRow(int rowNum) {
+    public Row getRow(final int rowNum) {
         return rows.get(rowNum);
     }
 
     @Override
-    public void shiftColumns(int startColumn, int endColumn, int n) {
+    public void shiftColumns(final int startColumn, final int endColumn, final int n) {
         throw new UnsupportedOperationException();
     }
 
@@ -69,12 +69,12 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setColumnHidden(int columnIndex, boolean hidden) {
+    public void setColumnHidden(final int columnIndex, final boolean hidden) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isColumnHidden(int columnIndex) {
+    public boolean isColumnHidden(final int columnIndex) {
         throw new UnsupportedOperationException();
     }
 
@@ -84,22 +84,22 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setRightToLeft(boolean value) {
+    public void setRightToLeft(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setColumnWidth(int columnIndex, int width) {
+    public void setColumnWidth(final int columnIndex, final int width) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getColumnWidth(int columnIndex) {
+    public int getColumnWidth(final int columnIndex) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public float getColumnWidthInPixels(int columnIndex) {
+    public float getColumnWidthInPixels(final int columnIndex) {
         throw new UnsupportedOperationException();
     }
 
@@ -109,7 +109,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDefaultColumnWidth(int width) {
+    public void setDefaultColumnWidth(final int width) {
         throw new UnsupportedOperationException();
     }
 
@@ -119,7 +119,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDefaultRowHeight(short height) {
+    public void setDefaultRowHeight(final short height) {
         throw new UnsupportedOperationException();
     }
 
@@ -129,22 +129,22 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDefaultRowHeightInPoints(float height) {
+    public void setDefaultRowHeightInPoints(final float height) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CellStyle getColumnStyle(int column) {
+    public CellStyle getColumnStyle(final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int addMergedRegion(CellRangeAddress region) {
+    public int addMergedRegion(final CellRangeAddress region) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int addMergedRegionUnsafe(CellRangeAddress region) {
+    public int addMergedRegionUnsafe(final CellRangeAddress region) {
         throw new UnsupportedOperationException();
     }
 
@@ -159,7 +159,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setHorizontallyCenter(boolean value) {
+    public void setHorizontallyCenter(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -169,17 +169,17 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setVerticallyCenter(boolean value) {
+    public void setVerticallyCenter(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeMergedRegion(int index) {
+    public void removeMergedRegion(final int index) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeMergedRegions(Collection<Integer> indices) {
+    public void removeMergedRegions(final Collection<Integer> indices) {
         throw new UnsupportedOperationException();
     }
 
@@ -189,7 +189,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public CellRangeAddress getMergedRegion(int index) {
+    public CellRangeAddress getMergedRegion(final int index) {
         throw new UnsupportedOperationException();
     }
 
@@ -209,7 +209,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setForceFormulaRecalculation(boolean value) {
+    public void setForceFormulaRecalculation(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -219,7 +219,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDisplayZeros(boolean value) {
+    public void setDisplayZeros(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -229,7 +229,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setAutobreaks(boolean value) {
+    public void setAutobreaks(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -239,7 +239,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDisplayGuts(boolean value) {
+    public void setDisplayGuts(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -249,7 +249,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setFitToPage(boolean value) {
+    public void setFitToPage(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -259,7 +259,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setRowSumsBelow(boolean value) {
+    public void setRowSumsBelow(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -269,7 +269,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setRowSumsRight(boolean value) {
+    public void setRowSumsRight(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -279,7 +279,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setPrintGridlines(boolean show) {
+    public void setPrintGridlines(final boolean show) {
         throw new UnsupportedOperationException();
     }
 
@@ -289,7 +289,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setPrintRowAndColumnHeadings(boolean show) {
+    public void setPrintRowAndColumnHeadings(final boolean show) {
         throw new UnsupportedOperationException();
     }
 
@@ -309,12 +309,12 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public double getMargin(short margin) {
+    public double getMargin(final short margin) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setMargin(short margin, double size) {
+    public void setMargin(final short margin, final double size) {
         throw new UnsupportedOperationException();
     }
 
@@ -324,7 +324,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void protectSheet(String password) {
+    public void protectSheet(final String password) {
         throw new UnsupportedOperationException();
     }
 
@@ -334,7 +334,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setZoom(int scale) {
+    public void setZoom(final int scale) {
         throw new UnsupportedOperationException();
     }
 
@@ -349,32 +349,32 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void showInPane(int topRow, int leftCol) {
+    public void showInPane(final int topRow, final int leftCol) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void shiftRows(int startRow, int endRow, int n) {
+    public void shiftRows(final int startRow, final int endRow, final int n) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void shiftRows(int startRow, int endRow, int n, boolean copyRowHeight, boolean resetOriginalRowHeight) {
+    public void shiftRows(final int startRow, final int endRow, final int n, final boolean copyRowHeight, final boolean resetOriginalRowHeight) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void createFreezePane(int colSplit, int rowSplit, int leftmostColumn, int topRow) {
+    public void createFreezePane(final int colSplit, final int rowSplit, final int leftmostColumn, final int topRow) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void createFreezePane(int colSplit, int rowSplit) {
+    public void createFreezePane(final int colSplit, final int rowSplit) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void createSplitPane(int xSplitPos, int ySplitPos, int leftmostColumn, int topRow, int activePane) {
+    public void createSplitPane(final int xSplitPos, final int ySplitPos, final int leftmostColumn, final int topRow, final int activePane) {
         throw new UnsupportedOperationException();
     }
 
@@ -389,7 +389,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDisplayGridlines(boolean show) {
+    public void setDisplayGridlines(final boolean show) {
         throw new UnsupportedOperationException();
     }
 
@@ -399,7 +399,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDisplayFormulas(boolean show) {
+    public void setDisplayFormulas(final boolean show) {
         throw new UnsupportedOperationException();
     }
 
@@ -409,22 +409,22 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setDisplayRowColHeadings(boolean show) {
+    public void setDisplayRowColHeadings(final boolean show) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setRowBreak(int row) {
+    public void setRowBreak(final int row) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isRowBroken(int row) {
+    public boolean isRowBroken(final int row) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeRowBreak(int row) {
+    public void removeRowBreak(final int row) {
         throw new UnsupportedOperationException();
     }
 
@@ -439,67 +439,67 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setColumnBreak(int column) {
+    public void setColumnBreak(final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isColumnBroken(int column) {
+    public boolean isColumnBroken(final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeColumnBreak(int column) {
+    public void removeColumnBreak(final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setColumnGroupCollapsed(int columnNumber, boolean collapsed) {
+    public void setColumnGroupCollapsed(final int columnNumber, final boolean collapsed) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void groupColumn(int fromColumn, int toColumn) {
+    public void groupColumn(final int fromColumn, final int toColumn) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void ungroupColumn(int fromColumn, int toColumn) {
+    public void ungroupColumn(final int fromColumn, final int toColumn) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void groupRow(int fromRow, int toRow) {
+    public void groupRow(final int fromRow, final int toRow) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void ungroupRow(int fromRow, int toRow) {
+    public void ungroupRow(final int fromRow, final int toRow) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setRowGroupCollapsed(int row, boolean collapse) {
+    public void setRowGroupCollapsed(final int row, final boolean collapse) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setDefaultColumnStyle(int column, CellStyle style) {
+    public void setDefaultColumnStyle(final int column, final CellStyle style) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void autoSizeColumn(int column) {
+    public void autoSizeColumn(final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void autoSizeColumn(int column, boolean useMergedCells) {
+    public void autoSizeColumn(final int column, final boolean useMergedCells) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Comment getCellComment(CellAddress ref) {
+    public Comment getCellComment(final CellAddress ref) {
         throw new UnsupportedOperationException();
     }
 
@@ -534,17 +534,17 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setSelected(boolean value) {
+    public void setSelected(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CellRange<? extends Cell> setArrayFormula(String formula, CellRangeAddress range) {
+    public CellRange<? extends Cell> setArrayFormula(final String formula, final CellRangeAddress range) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CellRange<? extends Cell> removeArrayFormula(Cell cell) {
+    public CellRange<? extends Cell> removeArrayFormula(final Cell cell) {
         throw new UnsupportedOperationException();
     }
 
@@ -559,12 +559,12 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void addValidationData(DataValidation dataValidation) {
+    public void addValidationData(final DataValidation dataValidation) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public AutoFilter setAutoFilter(CellRangeAddress range) {
+    public AutoFilter setAutoFilter(final CellRangeAddress range) {
         throw new UnsupportedOperationException();
     }
 
@@ -579,7 +579,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setRepeatingRows(CellRangeAddress rowRangeRef) {
+    public void setRepeatingRows(final CellRangeAddress rowRangeRef) {
         throw new UnsupportedOperationException();
     }
 
@@ -589,22 +589,22 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setRepeatingColumns(CellRangeAddress columnRangeRef) {
+    public void setRepeatingColumns(final CellRangeAddress columnRangeRef) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getColumnOutlineLevel(int columnIndex) {
+    public int getColumnOutlineLevel(final int columnIndex) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Hyperlink getHyperlink(int row, int column) {
+    public Hyperlink getHyperlink(final int row, final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Hyperlink getHyperlink(CellAddress address) {
+    public Hyperlink getHyperlink(final CellAddress address) {
         throw new UnsupportedOperationException();
     }
 
@@ -619,7 +619,7 @@ public class DummySheet implements Sheet {
     }
 
     @Override
-    public void setActiveCell(CellAddress address) {
+    public void setActiveCell(final CellAddress address) {
         throw new UnsupportedOperationException();
     }
 

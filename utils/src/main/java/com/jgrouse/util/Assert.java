@@ -40,11 +40,11 @@ public interface Assert {
         return notNull(expr, () -> interpolate(pattern, args));
     }
 
-    static void isNull(Object expr, @NotNull final Supplier<String> messageSupplier) {
+    static void isNull(final Object expr, @NotNull final Supplier<String> messageSupplier) {
         isTrue(expr == null, messageSupplier);
     }
 
-    static void isNull(Object expr, @NotNull final String pattern, final Object... args) {
+    static void isNull(final Object expr, @NotNull final String pattern, final Object... args) {
         isNull(expr, () -> interpolate(pattern, args));
     }
 
@@ -61,10 +61,10 @@ public interface Assert {
 
     @NotNull
     static <T extends Collection> T notNullElements(@NotNull final T expr,
-                                                    @NotNull Function<Integer, String> messageSupplierForNullElement) {
+                                                    @NotNull final Function<Integer, String> messageSupplierForNullElement) {
         notNull(expr, "Collection must be provided");
-        int[] i = {0};
-        for (Object o : expr) {
+        final int[] i = {0};
+        for (final Object o : expr) {
             notNull(o, () -> messageSupplierForNullElement.apply(i[0]));
             i[0]++;
         }

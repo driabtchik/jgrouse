@@ -19,20 +19,21 @@ public class DelegatingMetadataBasedCellValueExtractor implements CellValueExtra
     private final DataSetMetadata metadata;
     private final Collection<PoiTypeConverter<?>> converters;
 
-    public DelegatingMetadataBasedCellValueExtractor(@NotNull String nullValueToken,
-                                                     @NotNull DataSetMetadata metadata,
-                                                     @NotNull Collection<PoiTypeConverter<?>> converters) {
+    public DelegatingMetadataBasedCellValueExtractor(@NotNull final String nullValueToken,
+                                                     @NotNull final DataSetMetadata metadata,
+                                                     @NotNull final Collection<PoiTypeConverter<?>> converters) {
         this.nullValueToken = notNull(nullValueToken, "nullValueToken must be provided");
         this.metadata = notNull(metadata, "DataSet metadata must be provided");
         this.converters = notEmpty(converters, "type converters must be not empty");
     }
 
-    public DelegatingMetadataBasedCellValueExtractor(@NotNull DataSetMetadata metadata, @NotNull Collection<PoiTypeConverter<?>> converters) {
+    public DelegatingMetadataBasedCellValueExtractor(@NotNull final DataSetMetadata metadata,
+                                                     @NotNull final Collection<PoiTypeConverter<?>> converters) {
         this(NULL_VALUE_TOKEN, metadata, converters);
     }
 
     @Override
-    public Object getCellValue(Cell cell) {
+    public Object getCellValue(final Cell cell) {
         notNull(cell, "cell must be not null");
         final DataSetMetadataElement metadataElement = metadata.getElement(cell.getColumnIndex());
         if (cell.getCellType() == CellType.ERROR) {
@@ -42,7 +43,7 @@ public class DelegatingMetadataBasedCellValueExtractor implements CellValueExtra
             return handleNullValue(cell, metadataElement);
         }
 
-        Optional<PoiTypeConverter<?>> matchedConverter = converters.stream()
+        final Optional<PoiTypeConverter<?>> matchedConverter = converters.stream()
                 .filter(converter -> converter.canConvert(cell.getCellType(), metadataElement.getJdbcType()))
                 .findFirst();
 
@@ -55,7 +56,7 @@ public class DelegatingMetadataBasedCellValueExtractor implements CellValueExtra
     }
 
     @SuppressWarnings("SameReturnValue") // intended to return null or throw exception
-    private Object handleNullValue(Cell cell, DataSetMetadataElement metadataElement) {
+    private Object handleNullValue(final Cell cell, final DataSetMetadataElement metadataElement) {
         if (metadataElement.isNullable()) {
             return null;
         }
@@ -63,11 +64,11 @@ public class DelegatingMetadataBasedCellValueExtractor implements CellValueExtra
                 + getErrorDetails(cell, metadataElement));
     }
 
-    protected boolean isNullValue(Cell cell) {
+    protected boolean isNullValue(final Cell cell) {
         return cell.getCellType() == CellType.STRING && nullValueToken.equals(cell.getStringCellValue());
     }
 
-    private String getErrorDetails(Cell cell, DataSetMetadataElement metadataElement) {
+    private String getErrorDetails(final Cell cell, final DataSetMetadataElement metadataElement) {
         return ": \n\t sheet=" + cell.getRow().getSheet().getSheetName()
                 + "\n\t row=" + cell.getRow().getRowNum()
                 + "\n\t col=" + cell.getColumnIndex()

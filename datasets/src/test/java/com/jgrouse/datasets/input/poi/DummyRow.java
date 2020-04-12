@@ -14,10 +14,10 @@ public class DummyRow implements Row {
     private Sheet sheet;
     private int rowNum;
 
-    public DummyRow(List<Cell> cells) {
+    public DummyRow(final List<Cell> cells) {
         this.cells = cells;
         int i = 0;
-        for (Cell cell : cells) {
+        for (final Cell cell : cells) {
             if (cell != null) {
                 ((DummyCell) cell).fromRow(this).fromIndex(i);
             }
@@ -25,44 +25,44 @@ public class DummyRow implements Row {
         }
     }
 
-    public DummyRow fromSheet(Sheet sheet) {
+    public DummyRow fromSheet(final Sheet sheet) {
         this.sheet = sheet;
         return this;
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public DummyRow fromRowNum(int rowNum) {
+    public DummyRow fromRowNum(final int rowNum) {
         this.rowNum = rowNum;
         return this;
     }
 
     @Override
-    public Cell createCell(int column) {
+    public Cell createCell(final int column) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void shiftCellsRight(int firstShiftColumnIndex, int lastShiftColumnIndex, int step) {
+    public void shiftCellsRight(final int firstShiftColumnIndex, final int lastShiftColumnIndex, final int step) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void shiftCellsLeft(int firstShiftColumnIndex, int lastShiftColumnIndex, int step) {
+    public void shiftCellsLeft(final int firstShiftColumnIndex, final int lastShiftColumnIndex, final int step) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Cell createCell(int column, CellType type) {
+    public Cell createCell(final int column, final CellType type) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeCell(Cell cell) {
+    public void removeCell(final Cell cell) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setRowNum(int rowNum) {
+    public void setRowNum(final int rowNum) {
         throw new UnsupportedOperationException();
     }
 
@@ -72,16 +72,16 @@ public class DummyRow implements Row {
     }
 
     @Override
-    public Cell getCell(int cellNum) {
+    public Cell getCell(final int cellNum) {
         return retrieveCell(cellNum);
     }
 
-    private Cell retrieveCell(int cellNum) {
+    private Cell retrieveCell(final int cellNum) {
         return cellNum < cells.size() ? cells.get(cellNum) : null;
     }
 
     @Override
-    public Cell getCell(int cellNum, MissingCellPolicy policy) {
+    public Cell getCell(final int cellNum, final MissingCellPolicy policy) {
         isTrue(policy == CREATE_NULL_AS_BLANK, () -> "Accepted policy is " + CREATE_NULL_AS_BLANK);
         Cell cell = retrieveCell(cellNum);
         if (cell == null) {
@@ -106,12 +106,12 @@ public class DummyRow implements Row {
     }
 
     @Override
-    public void setHeight(short height) {
+    public void setHeight(final short height) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setZeroHeight(boolean zHeight) {
+    public void setZeroHeight(final boolean zHeight) {
         throw new UnsupportedOperationException();
     }
 
@@ -121,7 +121,7 @@ public class DummyRow implements Row {
     }
 
     @Override
-    public void setHeightInPoints(float height) {
+    public void setHeightInPoints(final float height) {
         throw new UnsupportedOperationException();
     }
 
@@ -146,7 +146,7 @@ public class DummyRow implements Row {
     }
 
     @Override
-    public void setRowStyle(CellStyle style) {
+    public void setRowStyle(final CellStyle style) {
         throw new UnsupportedOperationException();
     }
 

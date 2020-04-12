@@ -44,7 +44,7 @@ public class InputStreamGuardTest {
     public void testWithInputStream_normal() throws IOException {
         when(inputStreamSupplier.get()).thenReturn(inputStream);
         when(inputStreamFunction.apply(inputStream)).thenReturn(RESULT);
-        String res = withInputStream(inputStreamSupplier, inputStreamFunction);
+        final String res = withInputStream(inputStreamSupplier, inputStreamFunction);
         assertThat(res).isSameAs(RESULT);
         order.verify(inputStreamSupplier).get();
         order.verify(inputStreamFunction).apply(inputStream);

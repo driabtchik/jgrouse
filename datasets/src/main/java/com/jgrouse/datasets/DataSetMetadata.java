@@ -13,7 +13,7 @@ public class DataSetMetadata {
     private final List<DataSetMetadataElement> elements;
     private final String name;
 
-    public DataSetMetadata(@NotNull final List<DataSetMetadataElement> elements, @NotEmpty String name) {
+    public DataSetMetadata(@NotNull final List<DataSetMetadataElement> elements, @NotEmpty final String name) {
         this.name = notEmpty(name, () -> "dataSet name must be provided");
         notEmpty(elements, "At least one element must be provided");
         notNullElements(elements,

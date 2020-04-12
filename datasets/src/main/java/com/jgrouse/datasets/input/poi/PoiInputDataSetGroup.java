@@ -20,22 +20,22 @@ public class PoiInputDataSetGroup implements InputDataSetGroup {
     private final CellValueExtractorFactory cellValueExtractorFactory;
     private Workbook workbook;
 
-    public PoiInputDataSetGroup(@NotNull InputStreamSupplier inputStreamSupplier,
-                                @NotNull DataSetMetadataFactory<PoiSheetInputDataSet> dataSetMetadataFactory,
-                                @NotNull CellValueExtractorFactory cellValueExtractorFactory) {
+    public PoiInputDataSetGroup(@NotNull final InputStreamSupplier inputStreamSupplier,
+                                @NotNull final DataSetMetadataFactory<PoiSheetInputDataSet> dataSetMetadataFactory,
+                                @NotNull final CellValueExtractorFactory cellValueExtractorFactory) {
         this.inputStreamSupplier = notNull(inputStreamSupplier, "inputStreamSupplier must be provided");
         this.dataSetMetadataFactory = notNull(dataSetMetadataFactory, "dataSetMetadataFactory must be provided");
         this.cellValueExtractorFactory =
                 notNull(cellValueExtractorFactory, "cellValueExtractorFactory must be provided");
     }
 
-    protected Workbook createWorkbook(InputStream inputStream) throws IOException {
+    protected Workbook createWorkbook(final InputStream inputStream) throws IOException {
         Objects.requireNonNull(inputStream, "Input stream must be provided");
         return WorkbookFactory.create(inputStream);
     }
 
     @Override
-    public @NotNull PoiSheetInputDataSet get(@NotNull String dataSetName) {
+    public @NotNull PoiSheetInputDataSet get(@NotNull final String dataSetName) {
         notNull(dataSetName, "dataSetName must be provided");
         if (workbook == null) {
             workbook = InputStreamGuard.withInputStream(inputStreamSupplier, this::createWorkbook);

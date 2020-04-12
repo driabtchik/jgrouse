@@ -8,22 +8,22 @@ import java.io.IOException;
 @SuppressWarnings("WeakerAccess")
 public class IoRuntimeException extends RuntimeException {
 
-    public IoRuntimeException(Throwable cause) {
+    public IoRuntimeException(final Throwable cause) {
         super(cause);
     }
 
-    public static void asUnchecked(ExceptionAwareRunnable<IOException> runnable) {
+    public static void unchecked(final ExceptionAwareRunnable<IOException> runnable) {
         try {
             runnable.run();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IoRuntimeException(e);
         }
     }
 
-    public static <T> T asUnchecked(ExceptionAwareSupplier<T, IOException> supplier) {
+    public static <T> T asUnchecked(final ExceptionAwareSupplier<T, IOException> supplier) {
         try {
             return supplier.get();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IoRuntimeException(e);
         }
     }

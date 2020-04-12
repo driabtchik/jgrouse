@@ -9,12 +9,12 @@ public class HeaderAwareDataSetMetadataFactoryImpl<T extends HeaderAwareInputDat
 
     private final DataSetMetadataElementFactory dataSetMetadataElementFactory;
 
-    public HeaderAwareDataSetMetadataFactoryImpl(DataSetMetadataElementFactory dataSetMetadataElementFactory) {
+    public HeaderAwareDataSetMetadataFactoryImpl(final DataSetMetadataElementFactory dataSetMetadataElementFactory) {
         this.dataSetMetadataElementFactory = dataSetMetadataElementFactory;
     }
 
     @Override
-    public @NotNull DataSetMetadata create(@NotNull HeaderAwareInputDataSet dataSet, String dataSetName) {
+    public @NotNull DataSetMetadata create(@NotNull final HeaderAwareInputDataSet dataSet, final String dataSetName) {
         return new DataSetMetadata(dataSet.getHeaders()
                 .stream()
                 .map(dataSetMetadataElementFactory::create)

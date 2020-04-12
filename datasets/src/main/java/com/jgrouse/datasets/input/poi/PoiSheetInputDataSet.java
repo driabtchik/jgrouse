@@ -3,6 +3,7 @@ package com.jgrouse.datasets.input.poi;
 import com.jgrouse.datasets.DataSetMetadata;
 import com.jgrouse.datasets.input.DataSetMetadataFactory;
 import com.jgrouse.datasets.input.HeaderAwareInputDataSet;
+import com.jgrouse.util.codestyle.VisibleForTesting;
 import com.jgrouse.util.collections.BreakingSpliterator;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -20,15 +21,16 @@ import java.util.stream.StreamSupport;
 import static com.jgrouse.util.Assert.notNull;
 
 public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
+    @VisibleForTesting
     final Sheet sheet;
     private final CellValueExtractor cellValueExtractor;
     private final int metadataFieldCount;
     private final DataSetMetadata dataSetMetadata;
 
 
-    public PoiSheetInputDataSet(@NotNull Sheet sheet,
-                                @NotNull DataSetMetadataFactory<PoiSheetInputDataSet> dataSetMetadataFactory,
-                                @NotNull CellValueExtractorFactory cellValueExtractorFactory) {
+    public PoiSheetInputDataSet(@NotNull final Sheet sheet,
+                                @NotNull final DataSetMetadataFactory<PoiSheetInputDataSet> dataSetMetadataFactory,
+                                @NotNull final CellValueExtractorFactory cellValueExtractorFactory) {
         this.sheet = notNull(sheet, "sheet must be not null");
         this.dataSetMetadata =
                 notNull(dataSetMetadataFactory, "dataSetMetadataFactory must be provided")
@@ -39,13 +41,13 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
 
     @Override
     public List<String> getHeaders() {
-        Row row = notNull(sheet.getRow(0), () -> "Missing header row in sheet " + sheet.getSheetName());
+        final Row row = notNull(sheet.getRow(0), () -> "Missing header row in sheet " + sheet.getSheetName());
         return StreamSupport.stream(new BreakingSpliterator<>(row.spliterator(), this::isCellPresent), false)
                 .map(Cell::getStringCellValue)
                 .collect(Collectors.toList());
     }
 
-    private boolean isCellPresent(Cell cell) {
+    private boolean isCellPresent(final Cell cell) {
         return cell != null && cell.getCellType() != CellType.BLANK;
     }
 
@@ -62,14 +64,14 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
         return this.dataSetMetadata;
     }
 
-    private List<Object> extractRow(Row row) {
+    private List<Object> extractRow(final Row row) {
         return IntStream.range(0, metadataFieldCount)
                 .mapToObj(cellIndex -> extractCellValue(row, cellIndex))
                 .collect(Collectors.toList());
     }
 
-    private Object extractCellValue(Row row, int i) {
-        Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
+    private Object extractCellValue(final Row row, final int i) {
+        final Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
         return cellValueExtractor.getCellValue(cell);
     }
 }

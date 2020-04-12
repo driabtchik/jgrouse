@@ -6,6 +6,7 @@ plugins {
     id("pl.allegro.tech.build.axion-release") version "1.11.0"
     id("com.jfrog.bintray") version "1.8.5"
     id("org.ajoberstar.grgit") version "3.1.1" apply false
+    id("ru.vyarus.quality") version "4.1.0"
 }
 
 allprojects {
@@ -53,10 +54,17 @@ subprojects {
     apply(plugin = "jacoco")
     apply(plugin = "com.jfrog.bintray")
     apply(plugin = "org.ajoberstar.grgit")
+    apply(plugin = "ru.vyarus.quality")
 
     ext["uploadAllowed"] = artifactUploadAllowed()
 
-
+    quality {
+        spotbugsVersion = "4.0.1"
+        checkstyle = false
+        spotbugs = true
+        codenarc = true
+        pmd = true
+    }
 
     plugins.withType<JavaLibraryPlugin> {
         extensions.configure<JavaPluginExtension> {

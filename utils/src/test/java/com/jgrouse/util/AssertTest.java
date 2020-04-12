@@ -55,7 +55,7 @@ public class AssertTest {
 
     @Test
     public void testNotNull() {
-        String arg = "foo";
+        final String arg = "foo";
         assertThat(notNull(arg, NOT_SUPPOSED_TO_BE_INVOKED_SUPPLIER)).isSameAs(arg);
         assertThatThrownBy(() -> notNull(null, () -> "value expected to be not null")).isInstanceOf(
           AssertionException.class);
@@ -83,7 +83,7 @@ public class AssertTest {
 
     @Test
     public void testNotEmpty_collection() {
-        List<String> arg = Collections.singletonList("fooo");
+        final List<String> arg = Collections.singletonList("fooo");
         assertThat(notEmpty(arg, NOT_SUPPOSED_TO_BE_INVOKED_SUPPLIER)).isSameAs(arg);
 
         assertThatThrownBy(() -> notEmpty((Collection<?>) null, () -> EMPTY_VALUE_ERROR_MESSAGE))
@@ -101,7 +101,7 @@ public class AssertTest {
 
     @Test
     public void testNotNullElements() {
-        List<String> args = Arrays.asList("foo", "bar");
+        final List<String> args = Arrays.asList("foo", "bar");
         assertThat(notNullElements(args, NOT_SUPPOSED_TO_BE_INVOKED_FUNCTION)).isSameAs(args);
         assertThatThrownBy(() -> notNullElements(null, NOT_SUPPOSED_TO_BE_INVOKED_FUNCTION))
           .isInstanceOf(AssertionException.class);
@@ -113,7 +113,7 @@ public class AssertTest {
 
     @Test
     public void testNotEmpty_map() {
-        Map<String, String> arg = Collections.singletonMap("foo", "bar");
+        final Map<String, String> arg = Collections.singletonMap("foo", "bar");
         assertThat(notEmpty(arg, NOT_SUPPOSED_TO_BE_INVOKED_SUPPLIER)).isSameAs(arg);
         assertThatThrownBy(() -> notEmpty((Map<?,?>) null, () -> EMPTY_VALUE_ERROR_MESSAGE))
           .isInstanceOf(AssertionException.class)
@@ -131,7 +131,7 @@ public class AssertTest {
 
     @Test
     public void testNotEmpty_string() {
-        String val = "foo";
+        final String val = "foo";
         assertThat(notEmpty(val, NOT_SUPPOSED_TO_BE_INVOKED_SUPPLIER)).isSameAs(val);
         assertThatThrownBy(() -> notEmpty((String) null, () -> EMPTY_VALUE_ERROR_MESSAGE))
           .isInstanceOf(AssertionException.class)

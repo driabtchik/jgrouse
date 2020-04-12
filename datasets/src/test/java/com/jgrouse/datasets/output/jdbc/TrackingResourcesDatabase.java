@@ -17,13 +17,13 @@ public class TrackingResourcesDatabase extends JdbcDataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        Connection connection = configureConnection();
+        final Connection connection = configureConnection();
         knownConnections.add(connection);
         return connection;
     }
 
     private Connection configureConnection() throws SQLException {
-        Connection connection = spy(super.getConnection());
+        final Connection connection = spy(super.getConnection());
         doAnswer(x -> {
             knownConnections.remove(connection);
             return x.callRealMethod();
@@ -35,7 +35,7 @@ public class TrackingResourcesDatabase extends JdbcDataSource {
         return connection;
     }
 
-    private PreparedStatement configurePreparedStatement(PreparedStatement preparedStatement) throws SQLException {
+    private PreparedStatement configurePreparedStatement(final PreparedStatement preparedStatement) throws SQLException {
         doAnswer(x -> {
             knownPreparedStatements.remove(preparedStatement);
             return x.callRealMethod();

@@ -14,7 +14,7 @@ public class StringUtilsTest {
         //noinspection ConstantConditions false alarm
         assertThatThrownBy(() -> interpolate(null, "foo")).isInstanceOf(AssertionException.class);
 
-        String foo = "foo {} {}";
+        final String foo = "foo {} {}";
         assertThat(interpolate(foo)).isSameAs(foo);
         assertThat(interpolate(foo, (Object[]) null)).isSameAs(foo);
 

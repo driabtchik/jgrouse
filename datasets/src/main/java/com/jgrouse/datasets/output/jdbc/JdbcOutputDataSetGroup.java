@@ -7,14 +7,14 @@ import javax.sql.DataSource;
 import java.util.List;
 
 public class JdbcOutputDataSetGroup implements OutputDataSetGroup {
-    private final DataSource dataSource;
 
-    public JdbcOutputDataSetGroup(DataSource dataSource) {
-        this.dataSource = dataSource;
+    @SuppressWarnings({"PMD.SingularField", "PMD.UnusedFormalParameter", "PMD.UncommentedEmptyConstructor"})
+    //work in progress
+    public JdbcOutputDataSetGroup(final DataSource dataSource) {
     }
 
     @Override
-    public void save(List<InputDataSet> dataSets) {
+    public void save(final List<InputDataSet> dataSets) {
         //TODO: implement me
     }
 }

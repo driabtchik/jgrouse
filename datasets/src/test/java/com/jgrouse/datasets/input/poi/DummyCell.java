@@ -17,21 +17,21 @@ public class DummyCell implements Cell {
     private Row row;
     private int columnIndex;
 
-    public DummyCell(CellType cellType) {
+    public DummyCell(final CellType cellType) {
         this.cellType = cellType;
     }
 
-    DummyCell fromRow(Row row) {
+    DummyCell fromRow(final Row row) {
         this.row = row;
         return this;
     }
 
-    DummyCell fromIndex(int columnIndex) {
+    DummyCell fromIndex(final int columnIndex) {
         this.columnIndex = columnIndex;
         return this;
     }
 
-    public DummyCell withValue(Object value) {
+    public DummyCell withValue(final Object value) {
         this.value = value;
         return this;
     }
@@ -71,42 +71,45 @@ public class DummyCell implements Cell {
     }
 
     @Override
-    public void setCellType(CellType cellType) {
+    public void setCellType(final CellType cellType) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public CellType getCellTypeEnum() {
         return cellType;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public CellType getCachedFormulaResultTypeEnum() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellValue(double value) {
+    @SuppressWarnings("deprecation")
+    public void setCellValue(final double value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellValue(Date value) {
+    public void setCellValue(final Date value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellValue(Calendar value) {
+    public void setCellValue(final Calendar value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellValue(RichTextString value) {
+    public void setCellValue(final RichTextString value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellValue(String value) {
+    public void setCellValue(final String value) {
         throw new UnsupportedOperationException();
     }
 
@@ -116,7 +119,7 @@ public class DummyCell implements Cell {
     }
 
     @Override
-    public void setCellFormula(String formula) throws FormulaParseException {
+    public void setCellFormula(final String formula) throws FormulaParseException {
         throw new UnsupportedOperationException();
     }
 
@@ -142,12 +145,12 @@ public class DummyCell implements Cell {
     }
 
     @Override
-    public void setCellValue(boolean value) {
+    public void setCellValue(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setCellErrorValue(byte value) {
+    public void setCellErrorValue(final byte value) {
         throw new UnsupportedOperationException();
     }
 
@@ -171,7 +174,7 @@ public class DummyCell implements Cell {
     }
 
     @Override
-    public void setCellStyle(CellStyle style) {
+    public void setCellStyle(final CellStyle style) {
         throw new UnsupportedOperationException();
     }
 
@@ -191,7 +194,7 @@ public class DummyCell implements Cell {
     }
 
     @Override
-    public void setCellComment(Comment comment) {
+    public void setCellComment(final Comment comment) {
         throw new UnsupportedOperationException();
     }
 
@@ -206,7 +209,7 @@ public class DummyCell implements Cell {
     }
 
     @Override
-    public void setHyperlink(Hyperlink link) {
+    public void setHyperlink(final Hyperlink link) {
         throw new UnsupportedOperationException();
     }
 

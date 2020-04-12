@@ -7,8 +7,8 @@ import java.io.InputStream;
 
 public interface InputStreamGuard {
 
-    static <T> T withInputStream(ExceptionAwareSupplier<InputStream, IOException> inputStreamSupplier,
-                                 InputStreamFunction<T> inputStreamFunction) {
+    static <T> T withInputStream(final ExceptionAwareSupplier<InputStream, IOException> inputStreamSupplier,
+                                 final InputStreamFunction<T> inputStreamFunction) {
         return IoRuntimeException.asUnchecked(() -> {
             try (InputStream is = inputStreamSupplier.get()) {
                 return inputStreamFunction.apply(is);
@@ -16,8 +16,8 @@ public interface InputStreamGuard {
         });
     }
 
-    static void withInputStream(ExceptionAwareSupplier<InputStream, IOException> inputStreamSupplier,
-                                InputStreamConsumer inputStreamConsumer) {
+    static void withInputStream(final ExceptionAwareSupplier<InputStream, IOException> inputStreamSupplier,
+                                final InputStreamConsumer inputStreamConsumer) {
         withInputStream(inputStreamSupplier, is -> {
             inputStreamConsumer.accept(is);
             return null;

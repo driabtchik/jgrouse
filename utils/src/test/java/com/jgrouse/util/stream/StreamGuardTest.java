@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static com.jgrouse.util.stream.StreamGuard.guardResource;
 import static com.jgrouse.util.stream.StreamGuard.guardResourceSupplier;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -20,29 +21,29 @@ class StreamGuardTest {
 
     @Test
     void usageExample_autoClosingSingleResource() {
-        String content = "foo\nbar";
+        final String content = "foo\nbar";
 
-        StreamGuard<String> guard = guardResource(() -> new ByteArrayInputStream(content.getBytes()),
+        final StreamGuard<String> guard = guardResource(() -> new ByteArrayInputStream(content.getBytes(UTF_8)),
                 inputStream -> {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
                     return reader.lines();
                 });
 
-        StreamGuard<String> transformedGuard = guard.transform(s -> s.map(x -> x + "xxx"));
+        final StreamGuard<String> transformedGuard = guard.transform(s -> s.map(x -> x + "xxx"));
 
         assertConsumedContent(transformedGuard);
     }
 
-    private void assertConsumedContent(StreamGuard<String> guard) {
-        List<String> result = guard.consume(s -> s.collect(Collectors.toList()));
+    private void assertConsumedContent(final StreamGuard<String> guard) {
+        final List<String> result = guard.consume(s -> s.collect(Collectors.toList()));
         assertThat(result).containsExactly("fooxxx", "barxxx");
     }
 
     @Test
     void usageExample_autoClosingSpecificSupplier() {
-        StreamGuard<String> guard = guardResourceSupplier(new StagedResourceSupplier("foo\nbar"),
+        final StreamGuard<String> guard = guardResourceSupplier(new StagedResourceSupplier("foo\nbar"),
                 inputStream -> {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                    final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, UTF_8));
                     return reader.lines();
                 }).transform(s -> s.map(x -> x + "xxx"));
 
@@ -55,7 +56,7 @@ class StreamGuardTest {
 
         private InputStream stream;
 
-        StagedResourceSupplier(String content) {
+        StagedResourceSupplier(final String content) {
             this.content = content;
         }
 
@@ -68,13 +69,14 @@ class StreamGuardTest {
 
         @Override
         public InputStream get() {
-            return new ByteArrayInputStream(content.getBytes());
+            stream = new ByteArrayInputStream(content.getBytes(UTF_8));
+            return stream;
         }
     }
 
     @Test
     void closingOfResourceThrowsException() throws Exception {
-        AutoCloseable closeable = mock(AutoCloseable.class);
+        final AutoCloseable closeable = mock(AutoCloseable.class);
         doAnswer(x -> {
             throw new IllegalArgumentException("forcing error");
         }).when(closeable).close();
@@ -94,8 +96,7 @@ class StreamGuardTest {
 
     @Test
     void constructionOfGuardShouldNotTriggerProductionOfResourceStreamIfNotConsumed() {
-        @SuppressWarnings("unchecked")
-        Supplier<AutoCloseable> resourceSupplier = mock(Supplier.class);
+        @SuppressWarnings("unchecked") final Supplier<AutoCloseable> resourceSupplier = mock(Supplier.class);
 
         assertThatCode(() -> guardResource(resourceSupplier, r -> {
             throw new IllegalArgumentException("in stream construction");
@@ -105,8 +106,7 @@ class StreamGuardTest {
 
     @Test
     void transformationOfGuardShouldNotTriggerProductionOfResourceStreamIfNotConsumed() {
-        @SuppressWarnings("unchecked")
-        Supplier<AutoCloseable> resourceSupplier = mock(Supplier.class);
+        @SuppressWarnings("unchecked") final Supplier<AutoCloseable> resourceSupplier = mock(Supplier.class);
 
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
                 guardResource(resourceSupplier, r -> Stream.of("foo")).transform(s -> {
@@ -118,7 +118,7 @@ class StreamGuardTest {
 
     @Test
     void resourceIsClosedWhenExceptionIsThrownDuringConsumptionWhenCreatingStreamFromResource() throws Exception {
-        AutoCloseable resource = mock(AutoCloseable.class);
+        final AutoCloseable resource = mock(AutoCloseable.class);
         assertThatThrownBy(() -> guardResource(() -> resource, r -> {
             throw new IllegalStateException("breaking processing");
         }).consume(Stream::count)).isInstanceOf(IllegalStateException.class);
@@ -127,7 +127,7 @@ class StreamGuardTest {
 
     @Test
     void resourceIsClosedEvenIfTransformationProducesNonDerivedStream() throws Exception {
-        AutoCloseable resource = mock(AutoCloseable.class);
+        final AutoCloseable resource = mock(AutoCloseable.class);
 
         guardResource(() -> resource, r -> Stream.of("foo")).transform(s -> Stream.of("bar " + s.count())).consume(Stream::count);
 
@@ -136,7 +136,7 @@ class StreamGuardTest {
 
     @Test
     void resourceIsClosedWhenExceptionIsThrownDuringTransformation() throws Exception {
-        AutoCloseable resource = mock(AutoCloseable.class);
+        final AutoCloseable resource = mock(AutoCloseable.class);
 
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
                 guardResource(() -> resource, r -> Stream.of("foo")).transform(s -> s.map(r -> {

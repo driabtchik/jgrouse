@@ -5,6 +5,7 @@ import java.sql.JDBCType;
 
 import static com.jgrouse.util.Assert.notNull;
 
+@SuppressWarnings("PMD.LinguisticNaming")
 public class DataSetMetadataElement {
     private final String name;
     private final JDBCType jdbcType;
@@ -12,7 +13,7 @@ public class DataSetMetadataElement {
     private int scale = -1;
     private boolean nullable;
 
-    public DataSetMetadataElement(@NotNull String name, @NotNull JDBCType jdbcType) {
+    public DataSetMetadataElement(@NotNull final String name, @NotNull final JDBCType jdbcType) {
         this.name = notNull(name, "name  must be provided");
         this.jdbcType = notNull(jdbcType, "jdbcType must be provided");
     }
@@ -31,8 +32,7 @@ public class DataSetMetadataElement {
         return length;
     }
 
-    @NotNull
-    public DataSetMetadataElement setLength(int length) {
+    public DataSetMetadataElement setLength(final int length) {
         this.length = length;
         return this;
     }
@@ -42,7 +42,7 @@ public class DataSetMetadataElement {
     }
 
     @NotNull
-    public DataSetMetadataElement setScale(int scale) {
+    public DataSetMetadataElement setScale(final int scale) {
         this.scale = scale;
         return this;
     }
@@ -52,7 +52,7 @@ public class DataSetMetadataElement {
     }
 
     @NotNull
-    public DataSetMetadataElement setNullable(boolean nullable) {
+    public DataSetMetadataElement setNullable(final boolean nullable) {
         this.nullable = nullable;
         return this;
     }

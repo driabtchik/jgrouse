@@ -11,7 +11,7 @@ public class DummyWorkbook implements Workbook {
     private final List<Sheet> sheets;
     private final Map<String, Sheet> sheetsByName;
 
-    public DummyWorkbook(List<Sheet> sheets) {
+    public DummyWorkbook(final List<Sheet> sheets) {
         this.sheets = sheets;
         this.sheetsByName = new HashMap<>();
         this.sheets.forEach(sheet -> {
@@ -26,7 +26,7 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public void setActiveSheet(int sheetIndex) {
+    public void setActiveSheet(final int sheetIndex) {
         throw new UnsupportedOperationException();
     }
 
@@ -36,7 +36,7 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public Font getFontAt(int idx) {
+    public Font getFontAt(final int idx) {
         throw new UnsupportedOperationException();
     }
 
@@ -46,37 +46,37 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public void setFirstVisibleTab(int sheetIndex) {
+    public void setFirstVisibleTab(final int sheetIndex) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSheetOrder(String sheetName, int pos) {
+    public void setSheetOrder(final String sheetName, final int pos) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSelectedTab(int index) {
+    public void setSelectedTab(final int index) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSheetName(int sheet, String name) {
+    public void setSheetName(final int sheet, final String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String getSheetName(int sheet) {
+    public String getSheetName(final int sheet) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getSheetIndex(String name) {
+    public int getSheetIndex(final String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int getSheetIndex(Sheet sheet) {
+    public int getSheetIndex(final Sheet sheet) {
         throw new UnsupportedOperationException();
     }
 
@@ -86,12 +86,12 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public Sheet createSheet(String sheetName) {
+    public Sheet createSheet(final String sheetName) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Sheet cloneSheet(int sheetNum) {
+    public Sheet cloneSheet(final int sheetNum) {
         throw new UnsupportedOperationException();
     }
 
@@ -106,17 +106,17 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public Sheet getSheetAt(int index) {
+    public Sheet getSheetAt(final int index) {
         return sheets.get(index);
     }
 
     @Override
-    public Sheet getSheet(String name) {
+    public Sheet getSheet(final String name) {
         return Objects.requireNonNull(sheetsByName.get(name), () -> "Sheet " + name + " was not found");
     }
 
     @Override
-    public void removeSheetAt(int index) {
+    public void removeSheetAt(final int index) {
         throw new UnsupportedOperationException();
     }
 
@@ -126,18 +126,20 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public Font findFont(boolean bold, short color, short fontHeight, String name, boolean italic, boolean strikeout,
-                         short typeOffset, byte underline) {
+    public Font findFont(final boolean bold, final short color, final short fontHeight, final String name, final boolean italic, final boolean strikeout,
+                         final short typeOffset, final byte underline) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @SuppressWarnings({"deprecation"})
     public short getNumberOfFonts() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Font getFontAt(short idx) {
+    @SuppressWarnings("deprecation")
+    public Font getFontAt(final short idx) {
         throw new UnsupportedOperationException();
     }
 
@@ -152,12 +154,12 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public CellStyle getCellStyleAt(int idx) {
+    public CellStyle getCellStyleAt(final int idx) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void write(OutputStream stream) {
+    public void write(final OutputStream stream) {
         throw new UnsupportedOperationException();
     }
 
@@ -172,12 +174,12 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public Name getName(String name) {
+    public Name getName(final String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<? extends Name> getNames(String name) {
+    public List<? extends Name> getNames(final String name) {
         throw new UnsupportedOperationException();
     }
 
@@ -187,7 +189,8 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public Name getNameAt(int nameIndex) {
+    @SuppressWarnings("deprecation")
+    public Name getNameAt(final int nameIndex) {
         throw new UnsupportedOperationException();
     }
 
@@ -197,47 +200,50 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public int getNameIndex(String name) {
+    @SuppressWarnings("deprecation")
+    public int getNameIndex(final String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeName(int index) {
+    @SuppressWarnings("deprecation")
+    public void removeName(final int index) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeName(String name) {
+    @SuppressWarnings("deprecation")
+    public void removeName(final String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeName(Name name) {
+    public void removeName(final Name name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public int linkExternalWorkbook(String name, Workbook workbook) {
+    public int linkExternalWorkbook(final String name, final Workbook workbook) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setPrintArea(int sheetIndex, String reference) {
+    public void setPrintArea(final int sheetIndex, final String reference) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setPrintArea(int sheetIndex, int startColumn, int endColumn, int startRow, int endRow) {
+    public void setPrintArea(final int sheetIndex, final int startColumn, final int endColumn, final int startRow, final int endRow) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String getPrintArea(int sheetIndex) {
+    public String getPrintArea(final int sheetIndex) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removePrintArea(int sheetIndex) {
+    public void removePrintArea(final int sheetIndex) {
         throw new UnsupportedOperationException();
     }
 
@@ -247,7 +253,7 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public void setMissingCellPolicy(Row.MissingCellPolicy missingCellPolicy) {
+    public void setMissingCellPolicy(final Row.MissingCellPolicy missingCellPolicy) {
         throw new UnsupportedOperationException();
     }
 
@@ -257,7 +263,7 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public int addPicture(byte[] pictureData, int format) {
+    public int addPicture(final byte[] pictureData, final int format) {
         throw new UnsupportedOperationException();
     }
 
@@ -277,37 +283,37 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public void setHidden(boolean hiddenFlag) {
+    public void setHidden(final boolean hiddenFlag) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isSheetHidden(int sheetIx) {
+    public boolean isSheetHidden(final int sheetIx) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean isSheetVeryHidden(int sheetIx) {
+    public boolean isSheetVeryHidden(final int sheetIx) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSheetHidden(int sheetIx, boolean hidden) {
+    public void setSheetHidden(final int sheetIx, final boolean hidden) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public SheetVisibility getSheetVisibility(int sheetIx) {
+    public SheetVisibility getSheetVisibility(final int sheetIx) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void setSheetVisibility(int sheetIx, SheetVisibility visibility) {
+    public void setSheetVisibility(final int sheetIx, final SheetVisibility visibility) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void addToolPack(UDFFinder toolPack) {
+    public void addToolPack(final UDFFinder toolPack) {
         throw new UnsupportedOperationException();
     }
 
@@ -317,7 +323,7 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public void setForceFormulaRecalculation(boolean value) {
+    public void setForceFormulaRecalculation(final boolean value) {
         throw new UnsupportedOperationException();
     }
 
@@ -327,7 +333,7 @@ public class DummyWorkbook implements Workbook {
     }
 
     @Override
-    public int addOlePackage(byte[] oleData, String label, String fileName, String command) {
+    public int addOlePackage(final byte[] oleData, final String label, final String fileName, final String command) {
         throw new UnsupportedOperationException();
     }
 

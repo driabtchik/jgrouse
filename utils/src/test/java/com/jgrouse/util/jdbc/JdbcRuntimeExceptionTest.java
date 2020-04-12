@@ -11,25 +11,23 @@ class JdbcRuntimeExceptionTest {
 
     @Test
     void asUnchecked_runnable_noException() {
-        boolean[] invoked = {false};
-        assertThatCode(() -> JdbcRuntimeException.asUnchecked(() -> {
-            invoked[0] = true;
-        })).doesNotThrowAnyException();
+        final boolean[] invoked = {false};
+        assertThatCode(() -> JdbcRuntimeException.unchecked(() -> invoked[0] = true)).doesNotThrowAnyException();
         assertThat(invoked[0]).isTrue();
     }
 
     @Test
     void asUnchecked_runnable_withException() {
-        boolean[] invoked = {false};
-        SQLException sqlException = new SQLException("foobar");
+        final boolean[] invoked = {false};
+        final SQLException sqlException = new SQLException("foobar");
 
-        ExceptionAwareRunnable<SQLException> exceptionAwareRunnable = () -> {
+        final ExceptionAwareRunnable<SQLException> exceptionAwareRunnable = () -> {
             invoked[0] = true;
             throw sqlException;
         };
 
         assertThatExceptionOfType(JdbcRuntimeException.class)
-                .isThrownBy(() -> JdbcRuntimeException.asUnchecked(exceptionAwareRunnable))
+                .isThrownBy(() -> JdbcRuntimeException.unchecked(exceptionAwareRunnable))
                 .satisfies(ex -> assertThat(ex.getCause()).isSameAs(sqlException));
         assertThat(invoked[0]).isTrue();
     }
@@ -41,13 +39,13 @@ class JdbcRuntimeExceptionTest {
 
     @Test
     void asUnchecked_supplier_withException() {
-        SQLException sqlException = new SQLException("foobar");
+        final SQLException sqlException = new SQLException("foobar");
         assertThatExceptionOfType(JdbcRuntimeException.class)
                 .isThrownBy(() -> JdbcRuntimeException.asUnchecked(() -> exceptionThrower(sqlException)))
                 .satisfies(ex -> assertThat(ex.getCause()).isSameAs(sqlException));
     }
 
-    private String exceptionThrower(SQLException exception) throws SQLException {
+    private String exceptionThrower(final SQLException exception) throws SQLException {
         throw exception;
     }
 

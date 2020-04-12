@@ -5,6 +5,7 @@ import com.jgrouse.datasets.input.DataSetValueOutOfRangeException;
 import com.jgrouse.datasets.input.HeaderParsingInputDataSetMetadataElementFactory;
 import com.jgrouse.datasets.input.poi.PoiTypeConverter;
 import com.jgrouse.util.io.InputStreamFunction;
+import com.jgrouse.util.io.IoRuntimeException;
 import org.apache.poi.ss.usermodel.*;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +21,6 @@ import java.sql.JDBCType;
 import java.util.List;
 
 import static com.jgrouse.util.io.InputStreamGuard.withInputStream;
-import static com.jgrouse.util.io.IoRuntimeException.asUnchecked;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
@@ -44,7 +44,7 @@ class ConvertersTest {
 
     @AfterEach
     void after() {
-        asUnchecked(() -> workbook.close());
+        IoRuntimeException.unchecked(() -> workbook.close());
     }
 
     @ParameterizedTest
@@ -55,14 +55,14 @@ class ConvertersTest {
             "3,1917/10/25 18:43:12.0",
             "4,55"
     })
-    void convertToString(int row, String expected) {
-        Evaluator<String> evaluator = new Evaluator<>("strings", row, 1);
+    void convertToString(final int row, final String expected) {
+        final Evaluator<String> evaluator = new Evaluator<>("strings", row, 1);
         assertThat(evaluator.evaluate()).isEqualTo(expected);
     }
 
     @Test
     void convertToString_tooLong() {
-        Evaluator<String> evaluator = new Evaluator<>("strings", 5, 1);
+        final Evaluator<String> evaluator = new Evaluator<>("strings", 5, 1);
         assertThatExceptionOfType(DataSetValueOutOfRangeException.class)
                 .isThrownBy(evaluator::evaluate)
                 .satisfies(ex -> {
@@ -83,24 +83,24 @@ class ConvertersTest {
             "3, -2147483648",
             "4, -2147483649"
     })
-    void convertNumericToLong_atLowBoundry(int row, String expectedStr) {
-        long expected = Long.parseLong(expectedStr);
-        Evaluator<Long> evaluator = new Evaluator<>("longs", row, 1);
+    void convertNumericToLong_atLowBoundry(final int row, final String expectedStr) {
+        final long expected = Long.parseLong(expectedStr);
+        final Evaluator<Long> evaluator = new Evaluator<>("longs", row, 1);
         assertThat(evaluator.evaluate()).isEqualTo(expected);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3})
-    void convertNumericToLong_belowLowBoundry(int row) {
-        Evaluator<Long> evaluator = new Evaluator<>("longs", row, 3);
+    void convertNumericToLong_belowLowBoundry(final int row) {
+        final Evaluator<Long> evaluator = new Evaluator<>("longs", row, 3);
         assertThatExceptionOfType(DataSetValueOutOfRangeException.class).isThrownBy(evaluator::evaluate);
     }
 
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3})
-    void convertNumericToLong_aboveHighBoundry(int row) {
-        Evaluator<Long> evaluator = new Evaluator<>("longs", row, 4);
+    void convertNumericToLong_aboveHighBoundry(final int row) {
+        final Evaluator<Long> evaluator = new Evaluator<>("longs", row, 4);
         assertThatExceptionOfType(DataSetValueOutOfRangeException.class).isThrownBy(evaluator::evaluate);
     }
 
@@ -112,16 +112,16 @@ class ConvertersTest {
             "3, 2147483647",
             "4, 2147483648"
     })
-    void convertNumericToLong_atHighBoundry(int row, String expectedStr) {
-        long expected = Long.parseLong(expectedStr);
-        Evaluator<Long> evaluator = new Evaluator<>("longs", row, 2);
+    void convertNumericToLong_atHighBoundry(final int row, final String expectedStr) {
+        final long expected = Long.parseLong(expectedStr);
+        final Evaluator<Long> evaluator = new Evaluator<>("longs", row, 2);
         assertThat(evaluator.evaluate()).isEqualTo(expected);
     }
 
     @Test
     void convertNumericToBigInt_atHighBoundry() {
-        BigInteger expected = new BigInteger("9223372036854775807");
-        Evaluator<BigInteger> evaluator = new Evaluator<>("longs", 5, 2);
+        final BigInteger expected = new BigInteger("9223372036854775807");
+        final Evaluator<BigInteger> evaluator = new Evaluator<>("longs", 5, 2);
         assertThat(evaluator.evaluate()).isEqualTo(expected);
     }
 
@@ -131,9 +131,9 @@ class ConvertersTest {
             "1, 213.21",
             "2, 2340000000000000"
     })
-    void convertNumericToFloatingPoint(int row, String expectedStr) {
-        double expected = Double.parseDouble(expectedStr);
-        Evaluator<Double> evaluator = new Evaluator<>("doubles", row, 1);
+    void convertNumericToFloatingPoint(final int row, final String expectedStr) {
+        final double expected = Double.parseDouble(expectedStr);
+        final Evaluator<Double> evaluator = new Evaluator<>("doubles", row, 1);
         assertThat(evaluator.evaluate().doubleValue()).isCloseTo(expected, Offset.offset(1e-6));
     }
 
@@ -148,9 +148,9 @@ class ConvertersTest {
             "9, 0.0099",
             "10, -0.0099"
     })
-    void convertNumericToFixedPoint(int row, String expectedStr) {
-        BigDecimal expected = new BigDecimal(expectedStr);
-        Evaluator<BigDecimal> evaluator = new Evaluator<>("doubles", row, 1);
+    void convertNumericToFixedPoint(final int row, final String expectedStr) {
+        final BigDecimal expected = new BigDecimal(expectedStr);
+        final Evaluator<BigDecimal> evaluator = new Evaluator<>("doubles", row, 1);
         assertThat(evaluator.evaluate()).isEqualByComparingTo(expected);
     }
 
@@ -161,8 +161,8 @@ class ConvertersTest {
             13,
             14
     })
-    void convertNumericToFixedPoint_exceedsSize(int row) {
-        Evaluator<BigDecimal> evaluator = new Evaluator<>("doubles", row, 1);
+    void convertNumericToFixedPoint_exceedsSize(final int row) {
+        final Evaluator<BigDecimal> evaluator = new Evaluator<>("doubles", row, 1);
         assertThatExceptionOfType(DataSetValueOutOfRangeException.class).isThrownBy(evaluator::evaluate);
     }
 
@@ -172,26 +172,26 @@ class ConvertersTest {
         private final int row;
         private final int column;
 
-        private Evaluator(String sheetName, int row, int column) {
+        private Evaluator(final String sheetName, final int row, final int column) {
             this.sheet = workbook.getSheet(sheetName);
             this.row = row;
             this.column = column;
         }
 
+        @SuppressWarnings("unchecked")
         private T evaluate() {
-            Cell cell = evaluator.evaluateInCell(sheet.getRow(row).getCell(column));
-            DataSetMetadataElement metadataElement = getMetadata(cell);
-            PoiTypeConverter<?> typeConverter = CONVERTERS.stream()
+            final Cell cell = evaluator.evaluateInCell(sheet.getRow(row).getCell(column));
+            final DataSetMetadataElement metadataElement = getMetadata(cell);
+            final PoiTypeConverter<?> typeConverter = CONVERTERS.stream()
                     .filter(converter -> converter.canConvert(cell.getCellType(), metadataElement.getJdbcType()))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Cannot find handler for " + cell.getCellType()));
 
-            //noinspection unchecked
             return (T) typeConverter.convert(cell, metadataElement);
         }
 
-        private DataSetMetadataElement getMetadata(Cell cell) {
-            Cell typeCell = cell.getRow().getCell(0);
+        private DataSetMetadataElement getMetadata(final Cell cell) {
+            final Cell typeCell = cell.getRow().getCell(0);
             return metadataElementFactory.create(typeCell.getStringCellValue());
         }
     }

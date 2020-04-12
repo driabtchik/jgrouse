@@ -39,16 +39,16 @@ public class PoiInputInputDataSetGroupTest {
     public void testGet_testIoLifecycle() throws IOException {
 
 
-        InputStream inputStream = mock(InputStream.class);
+        final InputStream inputStream = mock(InputStream.class);
 
-        Sheet sheet1 = new DummySheet("sheet1", Collections.singletonList(createHeaderRow("foo", "bar")));
-        Sheet sheet2 = new DummySheet("sheet2", Collections.singletonList(createHeaderRow("baz", "moo")));
-        DummyWorkbook workbook = new DummyWorkbook(Arrays.asList(sheet1, sheet2));
+        final Sheet sheet1 = new DummySheet("sheet1", Collections.singletonList(createHeaderRow("foo", "bar")));
+        final Sheet sheet2 = new DummySheet("sheet2", Collections.singletonList(createHeaderRow("baz", "moo")));
+        final DummyWorkbook workbook = new DummyWorkbook(Arrays.asList(sheet1, sheet2));
 
-        PoiInputDataSetGroup dataSetGroup =
+        final PoiInputDataSetGroup dataSetGroup =
                 new PoiInputDataSetGroup(() -> inputStream, datasetMetadataFactory, cellValueExtractorFactory) {
                     @Override
-                    protected Workbook createWorkbook(InputStream argStream) {
+                    protected Workbook createWorkbook(final InputStream argStream) {
                         assertThat(argStream).isSameAs(inputStream);
                         assertThat(createWorkbookInvoked).isFalse();
                         createWorkbookInvoked = true;
@@ -56,22 +56,22 @@ public class PoiInputInputDataSetGroupTest {
                     }
                 };
         assertThat(createWorkbookInvoked).isFalse();
-        IoRuntimeException.asUnchecked(() -> verify(inputStream, times(0)).close());
+        IoRuntimeException.unchecked(() -> verify(inputStream, times(0)).close());
 
-        @NotNull PoiSheetInputDataSet dataSetSheet2 = dataSetGroup.get("sheet2");
+        @NotNull final PoiSheetInputDataSet dataSetSheet2 = dataSetGroup.get("sheet2");
         assertThat(dataSetSheet2.sheet).isSameAs(sheet2);
         assertThat(createWorkbookInvoked).isTrue();
         verify(inputStream).close();
-        @NotNull PoiSheetInputDataSet dataSetSheet1 = dataSetGroup.get("sheet1");
+        @NotNull final PoiSheetInputDataSet dataSetSheet1 = dataSetGroup.get("sheet1");
         assertThat(dataSetSheet1.sheet).isSameAs(sheet1);
         verifyNoMoreInteractions(inputStream);
     }
 
     @Test
     public void testGet_withRealWorksheet() {
-        PoiInputDataSetGroup poiDataSetGroup =
+        final PoiInputDataSetGroup poiDataSetGroup =
                 new PoiInputDataSetGroup(this::getSpreadsheetStream, datasetMetadataFactory, cellValueExtractorFactory);
-        PoiSheetInputDataSet dataSet = poiDataSetGroup.get("table1");
+        final PoiSheetInputDataSet dataSet = poiDataSetGroup.get("table1");
         assertThat(dataSet).isNotNull();
     }
 
@@ -79,7 +79,7 @@ public class PoiInputInputDataSetGroupTest {
         return this.getClass().getResourceAsStream("/com/jgrouse/datasets/input/poi/PoiDatasetFactoryTest.xlsx");
     }
 
-    private Row createHeaderRow(String... headers) {
+    private Row createHeaderRow(final String... headers) {
         return new DummyRow(
                 Stream.of(headers)
                         .map(h -> new DummyCell(CellType.STRING)
@@ -89,11 +89,11 @@ public class PoiInputInputDataSetGroupTest {
 
     @Test
     public void testConstructor_withException() throws IOException {
-        InputStream inputStream = mock(InputStream.class);
-        PoiInputDataSetGroup factory =
+        final InputStream inputStream = mock(InputStream.class);
+        final PoiInputDataSetGroup factory =
                 new PoiInputDataSetGroup(() -> inputStream, datasetMetadataFactory, cellValueExtractorFactory) {
                     @Override
-                    protected Workbook createWorkbook(InputStream argStream) {
+                    protected Workbook createWorkbook(final InputStream argStream) {
                         throw new UnsupportedOperationException("for test");
                     }
                 };

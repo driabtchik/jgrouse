@@ -3,6 +3,7 @@ package com.jgrouse.datasets.output.jdbc;
 import com.jgrouse.datasets.DataSetMetadata;
 import com.jgrouse.datasets.DataSetMetadataElement;
 import com.jgrouse.datasets.input.InputDataSet;
+import com.jgrouse.util.jdbc.JdbcRuntimeException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,15 +49,15 @@ class JdbcOutputDataSetGroupTest {
 
     @Test
     void save_normal() {
-        List<InputDataSet> dataSets = Arrays.asList(dataset1, dataset2);
+        final List<InputDataSet> dataSets = Arrays.asList(dataset1, dataset2);
         jdbcOutputDataSetGroup.save(dataSets);
     }
 
 
-    private void executeSql(String sql) {
-        asUnchecked(() -> {
-                    try (Connection connection = dataSource.getConnection()) {
-                        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+    private void executeSql(final String sql) {
+        JdbcRuntimeException.unchecked(() -> {
+                    try (final Connection connection = dataSource.getConnection()) {
+                        try (final PreparedStatement ps = connection.prepareStatement(sql)) {
                             ps.execute();
                         }
                     }
@@ -64,15 +65,15 @@ class JdbcOutputDataSetGroupTest {
         );
     }
 
-    private List<Map<String, Object>> loadFromSql(String sql) {
-        List<Map<String, Object>> result = new ArrayList<>();
-        asUnchecked(() -> {
-            try (Connection connection = dataSource.getConnection()) {
-                try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                    try (ResultSet rs = ps.executeQuery()) {
-                        List<String> columnNames = getColumnNames(rs);
+    private List<Map<String, Object>> loadFromSql(final String sql) {
+        final List<Map<String, Object>> result = new ArrayList<>();
+        JdbcRuntimeException.unchecked(() -> {
+            try (final Connection connection = dataSource.getConnection()) {
+                try (final PreparedStatement ps = connection.prepareStatement(sql)) {
+                    try (final ResultSet rs = ps.executeQuery()) {
+                        final List<String> columnNames = getColumnNames(rs);
                         while (rs.next()) {
-                            Map<String, Object> row = columnNames.stream().collect(Collectors.toMap(c -> c,
+                            final Map<String, Object> row = columnNames.stream().collect(Collectors.toMap(c -> c,
                                     c -> asUnchecked(() -> rs.getObject(c))));
                             result.add(row);
                         }
@@ -83,8 +84,8 @@ class JdbcOutputDataSetGroupTest {
         return result;
     }
 
-    private List<String> getColumnNames(ResultSet rs) throws SQLException {
-        ResultSetMetaData meta = rs.getMetaData();
+    private List<String> getColumnNames(final ResultSet rs) throws SQLException {
+        final ResultSetMetaData meta = rs.getMetaData();
         return IntStream.range(0, meta.getColumnCount())
                 .mapToObj(index -> asUnchecked(() -> meta.getColumnName(index + 1)))
                 .collect(Collectors.toList());

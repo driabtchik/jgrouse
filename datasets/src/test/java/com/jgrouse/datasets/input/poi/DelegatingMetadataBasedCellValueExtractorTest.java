@@ -43,13 +43,13 @@ public class DelegatingMetadataBasedCellValueExtractorTest {
 
     @Test
     public void testGetCellValue_normal() {
-        Cell targetCell = cellInSheet(new DummyCell(STRING).withValue("foo"));
+        final Cell targetCell = cellInSheet(new DummyCell(STRING).withValue("foo"));
         assertThat(extractor.getCellValue(targetCell)).isEqualTo("foo foo!");
     }
 
     @Test
     public void testGetCellValue_noConverter() {
-        Cell targetCell = cellInSheet(new DummyCell(BOOLEAN).withValue(false));
+        final Cell targetCell = cellInSheet(new DummyCell(BOOLEAN).withValue(false));
         assertThatThrownBy(() -> extractor.getCellValue(targetCell))
                 .isInstanceOf(PoiParsingException.class)
                 .hasMessageContaining("field2")
@@ -62,7 +62,7 @@ public class DelegatingMetadataBasedCellValueExtractorTest {
 
     @Test
     public void testGetCellValue_cellTypeError() {
-        Cell targetCell = cellInSheet(new DummyCell(CellType.ERROR));
+        final Cell targetCell = cellInSheet(new DummyCell(CellType.ERROR));
         assertThatThrownBy(() -> extractor.getCellValue(targetCell)).isInstanceOf(PoiParsingException.class)
                 .hasMessageContaining("row=1")
                 .hasMessageContaining("sheet=barsheet")
@@ -71,8 +71,8 @@ public class DelegatingMetadataBasedCellValueExtractorTest {
                 .hasMessageContaining("cellType=ERROR");
     }
 
-    private Cell cellInSheet(Cell targetCell) {
-        DummyRow row = new DummyRow(Arrays.asList(new DummyCell(CellType.BLANK), targetCell));
+    private Cell cellInSheet(final Cell targetCell) {
+        final DummyRow row = new DummyRow(Arrays.asList(new DummyCell(CellType.BLANK), targetCell));
         new DummySheet("barsheet", Arrays.asList(new DummyRow(Collections.emptyList()), row));
         return targetCell;
     }
@@ -80,19 +80,19 @@ public class DelegatingMetadataBasedCellValueExtractorTest {
     @Test
     public void testGetCellValue_nullLiteral_nullableColumn() {
         metadata.getElement(1).setNullable(true);
-        Cell targetCell = cellInSheet(new DummyCell(STRING).withValue("<NULL>"));
+        final Cell targetCell = cellInSheet(new DummyCell(STRING).withValue("<NULL>"));
         assertThat(extractor.getCellValue(targetCell)).isNull();
     }
 
     @Test
     public void testGetCellValue_notString_notNull() {
-        Cell targetCell = cellInSheet(new DummyCell(NUMERIC).withValue(42.0));
+        final Cell targetCell = cellInSheet(new DummyCell(NUMERIC).withValue(42.0));
         assertThat(extractor.getCellValue(targetCell)).isEqualTo("42.0");
     }
 
     @Test
     public void testGetCellValue_nullLiteral_notNullColumn() {
-        Cell targetCell = cellInSheet(new DummyCell(STRING).withValue("<NULL>"));
+        final Cell targetCell = cellInSheet(new DummyCell(STRING).withValue("<NULL>"));
         assertThatThrownBy(() -> extractor.getCellValue(targetCell)).isInstanceOf(PoiParsingException.class)
                 .hasMessageContaining("Column declared as not-nullable, but the cell value is <NULL>/blank");
     }
@@ -102,19 +102,19 @@ public class DelegatingMetadataBasedCellValueExtractorTest {
         private final Set<JDBCType> jdbcTypes;
         private final Function<Cell, R> convert;
 
-        public DummyConverter(CellType cellType, Set<JDBCType> jdbcTypes, Function<Cell, R> convert) {
+        public DummyConverter(final CellType cellType, final Set<JDBCType> jdbcTypes, final Function<Cell, R> convert) {
             this.cellType = cellType;
             this.jdbcTypes = jdbcTypes;
             this.convert = convert;
         }
 
         @Override
-        public R convert(Cell cell, DataSetMetadataElement metadataElement) {
+        public R convert(final Cell cell, final DataSetMetadataElement metadataElement) {
             return convert.apply(cell);
         }
 
         @Override
-        public boolean canConvert(CellType fromCellType, JDBCType toJdbcType) {
+        public boolean canConvert(final CellType fromCellType, final JDBCType toJdbcType) {
             return cellType.equals(fromCellType) && jdbcTypes.contains(toJdbcType);
         }
     }

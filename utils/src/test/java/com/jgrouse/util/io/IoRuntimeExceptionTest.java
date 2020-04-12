@@ -19,13 +19,13 @@ public class IoRuntimeExceptionTest {
 
     @Test
     public void testAsUnchecked_withSupplier_noErrors() {
-        String strValue = "foo";
+        final String strValue = "foo";
         assertThat(IoRuntimeException.asUnchecked(() -> strValue)).isSameAs(strValue);
     }
 
     @Test
     public void testAsUnchecked_withSupplier_withException() {
-        ExceptionAwareSupplier<String, IOException> supplierWithException = () -> {
+        final ExceptionAwareSupplier<String, IOException> supplierWithException = () -> {
             throw new IOException(THIS_IS_ERROR);
         };
 
@@ -37,17 +37,17 @@ public class IoRuntimeExceptionTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testAsUnchecked_withRunnable_noError() throws IOException {
-        ExceptionAwareRunnable<IOException> runnable = mock(ExceptionAwareRunnable.class);
-        IoRuntimeException.asUnchecked(runnable);
+        final ExceptionAwareRunnable<IOException> runnable = mock(ExceptionAwareRunnable.class);
+        IoRuntimeException.unchecked(runnable);
         verify(runnable).run();
     }
 
     @Test
     public void testAsUnchecked_withRunnable_withException() {
-        ExceptionAwareRunnable<IOException> runnable = () -> {
+        final ExceptionAwareRunnable<IOException> runnable = () -> {
             throw new IOException(THIS_IS_ERROR);
         };
-        assertThatThrownBy(() -> IoRuntimeException.asUnchecked(runnable))
+        assertThatThrownBy(() -> IoRuntimeException.unchecked(runnable))
           .isInstanceOf(IoRuntimeException.class)
           .hasMessageContaining(THIS_IS_ERROR);
     }

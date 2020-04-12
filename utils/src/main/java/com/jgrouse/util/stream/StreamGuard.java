@@ -10,25 +10,24 @@ public class StreamGuard<T> {
 
     private final Stream<T> stream;
 
-    private StreamGuard(Stream<T> stream) {
+    private StreamGuard(final Stream<T> stream) {
         this.stream = stream;
     }
 
-    public static <R extends AutoCloseable, T> StreamGuard<T> guardResource(Supplier<R> resourceSupplier,
-                                                                            Function<R, Stream<T>> streamGenerator) {
-        ResourceGuard<R> guard = new ResourceGuard<>(resourceSupplier);
+    public static <R extends AutoCloseable, T> StreamGuard<T> guardResource(final Supplier<R> resourceSupplier,
+                                                                            final Function<R, Stream<T>> streamGenerator) {
+        final ResourceGuard<R> guard = new ResourceGuard<>(resourceSupplier);
 
-        Stream<T> stream = Stream.of(guard)
+        final Stream<T> stream = Stream.of(guard)
                 .onClose(guard::close)
                 .map(ResourceGuard::get)
                 .flatMap(streamGenerator);
         return new StreamGuard<>(stream);
     }
 
-    public static <R, S extends AutoCloseable & Supplier<R>, T> StreamGuard<T> guardResourceSupplier(S resourceSupplier,
-                                                                                                     Function<R, Stream<T>> streamGenerator) {
-        @SuppressWarnings("Convert2MethodRef")
-        Stream<T> stream = Stream.of(resourceSupplier)
+    public static <R, S extends AutoCloseable & Supplier<R>, T> StreamGuard<T> guardResourceSupplier(final S resourceSupplier,
+                                                                                                     final Function<R, Stream<T>> streamGenerator) {
+        @SuppressWarnings("Convert2MethodRef") final Stream<T> stream = Stream.of(resourceSupplier)
                 .onClose(() -> closeWithRethrow(resourceSupplier))
                 .map(r -> r.get()) //Do not convert r.get to method reference due to a bug in JDK 1.8 compiler
                 .flatMap(streamGenerator);
@@ -36,12 +35,12 @@ public class StreamGuard<T> {
 
     }
 
-    public <C> StreamGuard<C> transform(Function<Stream<T>, Stream<C>> transformer) {
+    public <C> StreamGuard<C> transform(final Function<Stream<T>, Stream<C>> transformer) {
         return new StreamGuard<>(transformer.apply(this.stream).onClose(this.stream::close));
     }
 
 
-    public <R> R consume(Function<Stream<T>, R> consumer) {
+    public <R> R consume(final Function<Stream<T>, R> consumer) {
         try {
             return consumer.apply(stream);
         } finally {
@@ -49,19 +48,19 @@ public class StreamGuard<T> {
         }
     }
 
-    private static void closeWithRethrow(AutoCloseable autoCloseable) {
+    private static void closeWithRethrow(final AutoCloseable autoCloseable) {
         try {
             autoCloseable.close();
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             throw new StreamGuardException(ex);
         }
     }
 
-    private static class ResourceGuard<R extends AutoCloseable> implements Supplier<R> {
+    private static class ResourceGuard<R extends AutoCloseable> implements Supplier<R>, AutoCloseable {
         private final Supplier<R> originalSuppler;
         private R resource;
 
-        protected ResourceGuard(Supplier<R> originalSuppler) {
+        protected ResourceGuard(final Supplier<R> originalSuppler) {
             this.originalSuppler = originalSuppler;
         }
 
@@ -72,7 +71,8 @@ public class StreamGuard<T> {
             return resource;
         }
 
-        void close() {
+        @Override
+        public void close() {
             if (resource != null) {
                 closeWithRethrow(resource);
                 resource = null;

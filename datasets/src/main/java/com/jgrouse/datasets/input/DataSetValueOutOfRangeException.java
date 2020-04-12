@@ -11,7 +11,11 @@ public class DataSetValueOutOfRangeException extends RuntimeException {
     private final JDBCType jdbcType;
     private final Object value;
 
-    public DataSetValueOutOfRangeException(String datasetName, int row, int column, JDBCType jdbcType, Object value) {
+    public DataSetValueOutOfRangeException(final String datasetName,
+                                           final int row,
+                                           final int column,
+                                           final JDBCType jdbcType,
+                                           final Object value) {
         super(interpolate("Dataset:[{}] at [{}, {}] - value[{}] is out of range for JDBCType {}", datasetName, row, column, value, jdbcType));
         this.datasetName = datasetName;
         this.row = row;

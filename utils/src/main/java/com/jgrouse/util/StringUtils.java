@@ -2,7 +2,7 @@ package com.jgrouse.util;
 
 import javax.validation.constraints.NotNull;
 
-public abstract class StringUtils {
+public final class StringUtils {
 
     private static final String INTERPOLATION_TOKEN = "{}";
 
@@ -35,14 +35,14 @@ public abstract class StringUtils {
         if (args == null || args.length == 0) {
             return pattern;
         }
-        StringBuilder res = new StringBuilder();
+        final StringBuilder res = new StringBuilder();
         int currentPos = 0;
         int argIndex = 0;
         while (currentPos < pattern.length()) {
-            int nextPos = pattern.indexOf(INTERPOLATION_TOKEN, currentPos);
+            final int nextPos = pattern.indexOf(INTERPOLATION_TOKEN, currentPos);
             if (nextPos >= 0) {
                 res.append(pattern, currentPos, nextPos);
-                Object token = argIndex < args.length ? args[argIndex++] : INTERPOLATION_TOKEN;
+                final Object token = argIndex < args.length ? args[argIndex++] : INTERPOLATION_TOKEN;
                 res.append(token);
                 currentPos = nextPos + INTERPOLATION_TOKEN.length();
             } else {

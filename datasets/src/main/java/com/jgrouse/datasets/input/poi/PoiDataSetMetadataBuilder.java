@@ -18,8 +18,8 @@ public class PoiDataSetMetadataBuilder /*implements DataSetMetadataBuilder*/ {
     private final Workbook workbook;
     private final DataSetMetadataElementFactory dataSetMetadataElementFactory;
 
-    public PoiDataSetMetadataBuilder(Workbook workbook,
-                                     DataSetMetadataElementFactory dataSetMetadataElementFactory) {
+    public PoiDataSetMetadataBuilder(final Workbook workbook,
+                                     final DataSetMetadataElementFactory dataSetMetadataElementFactory) {
         this.workbook = workbook;
         this.dataSetMetadataElementFactory = dataSetMetadataElementFactory;
     }
@@ -35,39 +35,39 @@ public class PoiDataSetMetadataBuilder /*implements DataSetMetadataBuilder*/ {
                 .collect(Collectors.toMap(DataSetMetadata::getName, Function.identity()));
     }
 
-    private DataSetMetadata createMetadataForSheet(Sheet sheet) {
-        Row headerRow = sheet.getRow(0);
+    private DataSetMetadata createMetadataForSheet(final Sheet sheet) {
+        final Row headerRow = sheet.getRow(0);
         if (headerRow == null) {
             return null;
         }
-        List<DataSetMetadataElement> elements = createMetadataElements(headerRow);
+        final List<DataSetMetadataElement> elements = createMetadataElements(headerRow);
         if (elements.isEmpty()) {
             return null;
         }
-        String name = sheet.getSheetName();
+        final String name = sheet.getSheetName();
         return new DataSetMetadata(elements, name);
     }
 
-    private List<DataSetMetadataElement> createMetadataElements(Row headerRow) {
-        List<DataSetMetadataElement> elements = new ArrayList<>(headerRow.getLastCellNum());
-        Set<String> columnNames = new HashSet<>();
+    private List<DataSetMetadataElement> createMetadataElements(final Row headerRow) {
+        final List<DataSetMetadataElement> elements = new ArrayList<>(headerRow.getLastCellNum());
+        final Set<String> columnNames = new HashSet<>();
         for (int i = 0; i < headerRow.getLastCellNum(); i++) {
-            Cell cell = headerRow.getCell(i);
+            final Cell cell = headerRow.getCell(i);
             if (isRowTerminatedAtCell(cell)) {
                 break;
             }
-            DataSetMetadataElement metadataElement = dataSetMetadataElementFactory.create(cell.getStringCellValue());
+            final DataSetMetadataElement metadataElement = dataSetMetadataElementFactory.create(cell.getStringCellValue());
             isTrue(columnNames.add(metadataElement.getName()), () -> "Duplicated column " + metadataElement.getName());
             elements.add(metadataElement);
         }
         return elements;
     }
 
-    private boolean isRowTerminatedAtCell(Cell cell) {
+    private boolean isRowTerminatedAtCell(final Cell cell) {
         if (cell == null) {
             return true;
         }
-        CellType cellType = cell.getCellType();
+        final CellType cellType = cell.getCellType();
         if (cellType == CellType.BLANK) {
             return true;
         }

@@ -22,17 +22,22 @@ import static com.jgrouse.util.Assert.notNull;
  */
 public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetMetadataElementFactory {
     private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$");
+    public static final int MAX_ELEMENTS_IN_PAIR = 2;
 
 
     @Override
     @NotNull
-    public DataSetMetadataElement create(@NotNull String headerName) {
+    public DataSetMetadataElement create(@NotNull final String headerName) {
         return new Parser(notNull(headerName, "headerName must be provided")).parse();
     }
 
     public static class HeaderParsingException extends RuntimeException {
-        public HeaderParsingException(String message) {
+        public HeaderParsingException(final String message) {
             super(message);
+        }
+
+        public HeaderParsingException(final String message, final Throwable cause) {
+            super(message, cause);
         }
     }
 
@@ -46,7 +51,7 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
         private int scale = -1;
 
 
-        private Parser(String header) {
+        private Parser(final String header) {
             this.header = header;
             this.buffer = header;
         }
@@ -63,6 +68,7 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
                     .setScale(scale);
         }
 
+        @SuppressWarnings("PMD.SimplifyStartsWith")
         private void parseNullability() {
             if (buffer.startsWith("+")) {
                 nullable = true;
@@ -71,21 +77,21 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
         }
 
         private void parseColumnName() {
-            String[] nameAndTail = split(buffer, ":");
+            final String[] nameAndTail = split(buffer, ":");
             name = assertValidColumnName(nameAndTail[0]);
             buffer = nameAndTail.length > 1 ? nameAndTail[1] : "";
         }
 
-        private String assertValidColumnName(String name) {
+        private String assertValidColumnName(final String name) {
             if (!IDENTIFIER_PATTERN.matcher(name).matches()) {
                 throw new HeaderParsingException("Invalid column identifier \"" + name + "\" in " + header);
             }
             return name;
         }
 
-        private String[] split(String buffer, String separator) {
-            String[] result = StringUtils.splitByWholeSeparatorPreserveAllTokens(buffer, separator);
-            if (result.length > 2) {
+        private String[] split(final String buffer, final String separator) {
+            final String[] result = StringUtils.splitByWholeSeparatorPreserveAllTokens(buffer, separator);
+            if (result.length > MAX_ELEMENTS_IN_PAIR) {
                 throw new HeaderParsingException("Character '" + separator + "' should appear no more than once in " + header);
             }
             return result;
@@ -95,14 +101,14 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
             if (buffer.isEmpty()) {
                 throw new HeaderParsingException("No types were specified for column " + name);
             }
-            String[] typeParts = split(buffer, "(");
-            String typeName = typeParts[0];
+            final String[] typeParts = split(buffer, "(");
+            final String typeName = typeParts[0];
             jdbcType = validJdbcType(typeName);
             buffer = (typeParts.length > 1) ? typeParts[1] : "";
         }
 
-        private JDBCType validJdbcType(String typeName) {
-            Optional<JDBCType> matchedType = Stream.of(JDBCType.values())
+        private JDBCType validJdbcType(final String typeName) {
+            final Optional<JDBCType> matchedType = Stream.of(JDBCType.values())
                     .filter(type -> type.toString().equalsIgnoreCase(typeName))
                     .findAny();
             return matchedType
@@ -117,18 +123,18 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
                 throw new HeaderParsingException("Expecting ')' at the end of header " + header);
             }
             buffer = buffer.substring(0, buffer.length() - 1);
-            String[] lengthParts = split(buffer, ",");
+            final String[] lengthParts = split(buffer, ",");
             length = validNumber(lengthParts[0], "length");
             buffer = lengthParts.length > 1 ? lengthParts[1] : "";
         }
 
-        private int validNumber(String part, String partName) {
-            String value = part.trim();
+        private int validNumber(final String part, final String partName) {
+            final String value = part.trim();
             if (StringUtils.isNumeric(value)) {
                 try {
                     return Integer.parseInt(value);
-                } catch (NumberFormatException ex) {
-                    //NO-OP - exception is thrown below
+                } catch (final NumberFormatException ex) {
+                    throw new HeaderParsingException("Invalid " + partName + " '" + value + "' in header " + header, ex);
                 }
             }
             throw new HeaderParsingException("Invalid " + partName + " '" + value + "' in header " + header);
@@ -141,7 +147,5 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
             }
             scale = validNumber(buffer, "scale");
         }
-
     }
-
 }

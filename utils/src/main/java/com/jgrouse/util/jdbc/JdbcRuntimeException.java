@@ -7,22 +7,22 @@ import java.sql.SQLException;
 
 public class JdbcRuntimeException extends RuntimeException {
 
-    public JdbcRuntimeException(Throwable cause) {
+    public JdbcRuntimeException(final Throwable cause) {
         super(cause);
     }
 
-    public static void asUnchecked(ExceptionAwareRunnable<SQLException> runnable) {
+    public static void unchecked(final ExceptionAwareRunnable<SQLException> runnable) {
         try {
             runnable.run();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new JdbcRuntimeException(e);
         }
     }
 
-    public static <T> T asUnchecked(ExceptionAwareSupplier<T, SQLException> supplier) {
+    public static <T> T asUnchecked(final ExceptionAwareSupplier<T, SQLException> supplier) {
         try {
             return supplier.get();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             throw new JdbcRuntimeException(e);
         }
     }

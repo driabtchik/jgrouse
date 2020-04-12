@@ -101,11 +101,11 @@ public class PoiInputDataSetMetadataBuilderTest {
 
     @Test
     public void testBuild_successful() {
-        PoiDataSetMetadataBuilder builder = new PoiDataSetMetadataBuilder(WORKBOOK_NO_ERRORS,
+        final PoiDataSetMetadataBuilder builder = new PoiDataSetMetadataBuilder(WORKBOOK_NO_ERRORS,
                 dataSetMetadataElementFactory
         );
 
-        Map<String, DataSetMetadata> expectedMetadata = Stream.of(new DataSetMetadata(
+        final Map<String, DataSetMetadata> expectedMetadata = Stream.of(new DataSetMetadata(
                         asList(
                                 createElement("f1_field"),
                                 createElement("f2_field")
@@ -120,20 +120,20 @@ public class PoiInputDataSetMetadataBuilderTest {
                         ), SHEET_3)).collect(Collectors.toMap(DataSetMetadata::getName, Function.identity()));
 
 
-        @NotNull Map<String, DataSetMetadata> actualMetadata = builder.build();
+        @NotNull final Map<String, DataSetMetadata> actualMetadata = builder.build();
         assertThat(actualMetadata).containsKeys(SHEET_1, SHEET_2, SHEET_3);
         actualMetadata.forEach((name, metadata) ->
                 assertThat(metadata).usingRecursiveComparison().isEqualTo(expectedMetadata.get(name))
         );
     }
 
-    private DataSetMetadataElement createElement(String fieldName) {
+    private DataSetMetadataElement createElement(final String fieldName) {
         return new DataSetMetadataElement(fieldName, JDBCType.VARCHAR);
     }
 
     @Test
     public void testBuild_withErrors() {
-        PoiDataSetMetadataBuilder builder = new PoiDataSetMetadataBuilder(WORKBOOK_WRONG_CELL_TYPE_IN_HEADER,
+        final PoiDataSetMetadataBuilder builder = new PoiDataSetMetadataBuilder(WORKBOOK_WRONG_CELL_TYPE_IN_HEADER,
                 dataSetMetadataElementFactory
         );
         assertThatThrownBy(builder::build).isInstanceOf(PoiParsingException.class);
@@ -141,7 +141,7 @@ public class PoiInputDataSetMetadataBuilderTest {
 
     @Test
     public void testBuild_dupColumns() {
-        PoiDataSetMetadataBuilder builder = new PoiDataSetMetadataBuilder(WORKBOOK_DUP_COLUMNS,
+        final PoiDataSetMetadataBuilder builder = new PoiDataSetMetadataBuilder(WORKBOOK_DUP_COLUMNS,
                 dataSetMetadataElementFactory
         );
         assertThatThrownBy(builder::build).isInstanceOf(AssertionException.class);

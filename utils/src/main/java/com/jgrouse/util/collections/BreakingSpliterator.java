@@ -9,15 +9,15 @@ public class BreakingSpliterator<T> implements Spliterator<T> {
     private final Spliterator<T> delegate;
     private final Predicate<T> circuitBreaker;
 
-    public BreakingSpliterator(Spliterator<T> delegate, Predicate<T> circuitBreaker) {
+    public BreakingSpliterator(final Spliterator<T> delegate, final Predicate<T> circuitBreaker) {
         this.delegate = delegate;
         this.circuitBreaker = circuitBreaker;
     }
 
     @Override
-    public boolean tryAdvance(Consumer<? super T> action) {
-        boolean[] accepted = {true};
-        boolean res = delegate.tryAdvance(t -> {
+    public boolean tryAdvance(final Consumer<? super T> action) {
+        final boolean[] accepted = {true};
+        final boolean res = delegate.tryAdvance(t -> {
             if (circuitBreaker.test(t)) {
                 action.accept(t);
             } else {
@@ -48,7 +48,7 @@ public class BreakingSpliterator<T> implements Spliterator<T> {
     }
 
     @Override
-    public boolean hasCharacteristics(int characteristics) {
+    public boolean hasCharacteristics(final int characteristics) {
         return delegate.hasCharacteristics(characteristics)
                 && ((characteristics & (Spliterator.SIZED | Spliterator.SUBSIZED)) == 0);
     }

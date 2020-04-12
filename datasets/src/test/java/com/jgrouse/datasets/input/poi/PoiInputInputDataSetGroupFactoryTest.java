@@ -12,11 +12,11 @@ class PoiInputInputDataSetGroupFactoryTest {
 
     @Test
     void createAndValidateContent() {
-        PoiInputDataSetGroupFactory factory = new PoiInputDataSetGroupFactory();
-        PoiInputDataSetGroup dataSetGroup =
+        final PoiInputDataSetGroupFactory factory = new PoiInputDataSetGroupFactory();
+        final PoiInputDataSetGroup dataSetGroup =
                 factory.create(() -> this.getClass().getResourceAsStream("/com/jgrouse/datasets/input/poi/PoiDatasetFactoryTest.xlsx"));
 
-        InputDataSet table1 = dataSetGroup.get("table1");
+        final InputDataSet table1 = dataSetGroup.get("table1");
 
         assertThat(table1.stream()).usingRecursiveFieldByFieldElementComparator().containsExactly(
                 Arrays.asList(1L, "foo", 2.3),

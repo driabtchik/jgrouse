@@ -21,7 +21,7 @@ public class PoiInputDataSetGroupFactory {
 
     }
 
-    public PoiInputDataSetGroup create(InputStreamSupplier inputStreamSupplier) {
+    public PoiInputDataSetGroup create(final InputStreamSupplier inputStreamSupplier) {
         return new PoiInputDataSetGroup(inputStreamSupplier, datasetMetadataFactory, cellValueExtractorFactory);
     }
 

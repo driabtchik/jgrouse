@@ -24,7 +24,7 @@ public class MapBuilderTest {
 
     @Test
     void statics() {
-        TreeMap<String, Integer> seedMap = new TreeMap<>();
+        final TreeMap<String, Integer> seedMap = new TreeMap<>();
         assertThat(MapBuilder.from(seedMap).build()).isSameAs(seedMap);
 
         assertThat(MapBuilder.from("foo", 42).build()).containsOnly(MapEntry.entry("foo", 42));

@@ -50,8 +50,8 @@ public class BreakingSpliteratorTest {
 
     @Test
     void delegatesForEachRemaining() {
-        Spliterator<Integer> delegate = asList(42, 44, -3, 2).spliterator();
-        Set<Integer> buffer = new HashSet<>();
+        final Spliterator<Integer> delegate = asList(42, 44, -3, 2).spliterator();
+        final Set<Integer> buffer = new HashSet<>();
 
         new BreakingSpliterator<>(delegate, r -> r > 0).forEachRemaining(buffer::add);
         assertThat(buffer).containsExactlyInAnyOrder(42, 44);
@@ -60,7 +60,7 @@ public class BreakingSpliteratorTest {
     @SuppressWarnings("unchecked")
     @Test
     void delegatesForEstimateSize() {
-        Spliterator<String> delegate = mock(Spliterator.class);
+        final Spliterator<String> delegate = mock(Spliterator.class);
         when(delegate.estimateSize()).thenReturn(42L);
         assertThat(new BreakingSpliterator<>(delegate, r -> true).estimateSize()).isEqualTo(42L);
     }
@@ -68,14 +68,14 @@ public class BreakingSpliteratorTest {
     @SuppressWarnings("unchecked")
     @Test
     void cannotProvideExactSize() {
-        Spliterator<String> delegate = mock(Spliterator.class);
+        final Spliterator<String> delegate = mock(Spliterator.class);
         when(delegate.getExactSizeIfKnown()).thenThrow(new IllegalArgumentException("do not call me"));
         assertThat(new BreakingSpliterator<>(delegate, r -> true).getExactSizeIfKnown()).isEqualTo(-1L);
     }
 
     @Test
     void useDelegatesComparator() {
-        Spliterator<String> delegate = Stream.of("foo", "bar").sorted().spliterator();
+        final Spliterator<String> delegate = Stream.of("foo", "bar").sorted().spliterator();
         assertThat(new BreakingSpliterator<>(delegate, r -> true).getComparator()).isSameAs(delegate.getComparator());
 
     }
@@ -83,22 +83,22 @@ public class BreakingSpliteratorTest {
     @SuppressWarnings({"unchecked", "MagicConstant"})
     @Test
     void characteristicsExcludeSized() {
-        Spliterator<String> delegate = mock(Spliterator.class);
+        final Spliterator<String> delegate = mock(Spliterator.class);
         when(delegate.characteristics()).thenReturn(FULL_MASK);
         when(delegate.hasCharacteristics(anyInt())).thenReturn(true);
-        int expectedCharacteristics = FULL_MASK ^ (Spliterator.SIZED | Spliterator.SUBSIZED);
-        BreakingSpliterator<String> spliterator = new BreakingSpliterator<>(delegate, r -> true);
+        final int expectedCharacteristics = FULL_MASK ^ (Spliterator.SIZED | Spliterator.SUBSIZED);
+        final BreakingSpliterator<String> spliterator = new BreakingSpliterator<>(delegate, r -> true);
         assertThat(spliterator.characteristics()).isEqualTo(expectedCharacteristics);
         assertThat(spliterator.hasCharacteristics(Spliterator.SIZED)).isFalse();
         assertThat(spliterator.hasCharacteristics(Spliterator.SUBSIZED)).isFalse();
         assertThat(spliterator.hasCharacteristics(Spliterator.SUBSIZED |
-                Spliterator.SIZED |
-                Spliterator.CONCURRENT |
-                Spliterator.DISTINCT |
-                Spliterator.IMMUTABLE |
-                Spliterator.NONNULL |
-                Spliterator.ORDERED |
-                Spliterator.SORTED
+                        Spliterator.SIZED |
+                        Spliterator.CONCURRENT |
+                        Spliterator.DISTINCT |
+                        Spliterator.IMMUTABLE |
+                        Spliterator.NONNULL |
+                        Spliterator.ORDERED |
+                        Spliterator.SORTED
                 )).isFalse();
 
         assertThat(spliterator.hasCharacteristics(

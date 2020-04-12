@@ -20,7 +20,7 @@ class HeaderAwareInputDataSetMetadataFactoryImplTest {
 
     @Test
     void create() {
-        HeaderAwareInputDataSet dataSet = mock(HeaderAwareInputDataSet.class);
+        final HeaderAwareInputDataSet dataSet = mock(HeaderAwareInputDataSet.class);
         when(dataSet.getHeaders()).thenReturn(Arrays.asList("foo", "bar"));
         assertThat(metadataFactory.create(dataSet, "dataSetName"))
                 .usingRecursiveComparison().isEqualTo(
