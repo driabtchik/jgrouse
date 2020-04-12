@@ -38,7 +38,7 @@ public abstract class StringUtils {
         StringBuilder res = new StringBuilder();
         int currentPos = 0;
         int argIndex = 0;
-        while (currentPos >= 0 && currentPos < pattern.length()) {
+        while (currentPos < pattern.length()) {
             int nextPos = pattern.indexOf(INTERPOLATION_TOKEN, currentPos);
             if (nextPos >= 0) {
                 res.append(pattern, currentPos, nextPos);
