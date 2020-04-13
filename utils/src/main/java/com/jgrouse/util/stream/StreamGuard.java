@@ -1,12 +1,13 @@
 package com.jgrouse.util.stream;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
+import com.jgrouse.util.ExceptionAwareFunction;
+import com.jgrouse.util.ExceptionAwareSupplier;
+
 import java.util.stream.Stream;
 
 import static com.jgrouse.util.Assert.isNull;
 
-public class StreamGuard<T> {
+public final class StreamGuard<T> {
 
     private final Stream<T> stream;
 
@@ -14,35 +15,35 @@ public class StreamGuard<T> {
         this.stream = stream;
     }
 
-    public static <R extends AutoCloseable, T> StreamGuard<T> guardResource(final Supplier<R> resourceSupplier,
-                                                                            final Function<R, Stream<T>> streamGenerator) {
+    public static <R extends AutoCloseable, T> StreamGuard<T> guardResource(final ExceptionAwareSupplier<R, Exception> resourceSupplier,
+                                                                            final ExceptionAwareFunction<R, Stream<T>> streamGenerator) {
         final ResourceGuard<R> guard = new ResourceGuard<>(resourceSupplier);
 
         final Stream<T> stream = Stream.of(guard)
                 .onClose(guard::close)
-                .map(ResourceGuard::get)
-                .flatMap(streamGenerator);
+                .map(ResourceGuard::uncheckedGet)
+                .flatMap(streamGenerator::uncheckedApply);
         return new StreamGuard<>(stream);
     }
 
-    public static <R, S extends AutoCloseable & Supplier<R>, T> StreamGuard<T> guardResourceSupplier(final S resourceSupplier,
-                                                                                                     final Function<R, Stream<T>> streamGenerator) {
+    public static <R, S extends AutoCloseable & ExceptionAwareSupplier<R, Exception>, T> StreamGuard<T> guardResourceSupplier(final S resourceSupplier,
+                                                                                                                              final ExceptionAwareFunction<R, Stream<T>> streamGenerator) {
         @SuppressWarnings("Convert2MethodRef") final Stream<T> stream = Stream.of(resourceSupplier)
                 .onClose(() -> closeWithRethrow(resourceSupplier))
-                .map(r -> r.get()) //Do not convert r.get to method reference due to a bug in JDK 1.8 compiler
-                .flatMap(streamGenerator);
+                .map(r -> r.uncheckedGet()) //Do not convert r.get to method reference due to a bug in JDK 1.8 compiler
+                .flatMap(streamGenerator::uncheckedApply);
         return new StreamGuard<>(stream);
 
     }
 
-    public <C> StreamGuard<C> transform(final Function<Stream<T>, Stream<C>> transformer) {
-        return new StreamGuard<>(transformer.apply(this.stream).onClose(this.stream::close));
+    public <C> StreamGuard<C> transform(final ExceptionAwareFunction<Stream<T>, Stream<C>> transformer) {
+        return new StreamGuard<>(transformer.uncheckedApply(this.stream).onClose(this.stream::close));
     }
 
 
-    public <R> R consume(final Function<Stream<T>, R> consumer) {
+    public <R> R consume(final ExceptionAwareFunction<Stream<T>, R> consumer) {
         try {
-            return consumer.apply(stream);
+            return consumer.uncheckedApply(stream);
         } finally {
             stream.close();
         }
@@ -56,16 +57,16 @@ public class StreamGuard<T> {
         }
     }
 
-    private static class ResourceGuard<R extends AutoCloseable> implements Supplier<R>, AutoCloseable {
-        private final Supplier<R> originalSuppler;
+    private static class ResourceGuard<R extends AutoCloseable> implements ExceptionAwareSupplier<R, Exception>, AutoCloseable {
+        private final ExceptionAwareSupplier<R, Exception> originalSuppler;
         private R resource;
 
-        protected ResourceGuard(final Supplier<R> originalSuppler) {
+        protected ResourceGuard(final ExceptionAwareSupplier<R, Exception> originalSuppler) {
             this.originalSuppler = originalSuppler;
         }
 
         @Override
-        public R get() {
+        public R get() throws Exception {
             isNull(resource, "Resource supplier had been already invoked");
             resource = originalSuppler.get();
             return resource;

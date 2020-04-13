@@ -41,7 +41,7 @@ public class HeaderParsingInputDataSetMetadataElementFactory implements DataSetM
         }
     }
 
-    private static class Parser {
+    private final static class Parser {
         private final String header;
         private String buffer;
         private boolean nullable;

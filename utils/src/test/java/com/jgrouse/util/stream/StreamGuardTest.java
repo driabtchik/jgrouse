@@ -1,5 +1,7 @@
 package com.jgrouse.util.stream;
 
+import com.jgrouse.util.ExceptionAwareSupplier;
+import com.jgrouse.util.UncheckedException;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -7,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,13 +51,26 @@ class StreamGuardTest {
         assertConsumedContent(guard);
     }
 
-    static class StagedResourceSupplier implements Supplier<InputStream>, AutoCloseable {
+    @Test
+    void guard_whenSupplierThrowsException() {
+        assertThatExceptionOfType(UncheckedException.class)
+                .isThrownBy(() ->
+                        guardResource(() -> {
+                                    throw new IllegalArgumentException("breaking exception");
+                                }, s -> Stream.of("foobar")
+                        ).transform(s -> s.map(x -> x + "xxx"))
+                                .consume(Stream::count)
+                )
+                .satisfies(ex -> assertThat(ex.getCause()).hasMessageContaining("breaking exception"));
+    }
+
+    static class StagedResourceSupplier implements ExceptionAwareSupplier<InputStream, Exception>, AutoCloseable {
 
         private final String content;
 
         private InputStream stream;
 
-        StagedResourceSupplier(final String content) {
+        StagedResourceSupplier(@SuppressWarnings("SameParameterValue") final String content) {
             this.content = content;
         }
 
@@ -81,7 +95,7 @@ class StreamGuardTest {
             throw new IllegalArgumentException("forcing error");
         }).when(closeable).close();
         assertThatExceptionOfType(StreamGuardException.class).isThrownBy(() ->
-        guardResource(() -> closeable, c -> Stream.of("foo", "bar")).consume(Stream::count)
+                guardResource(() -> closeable, c -> Stream.of("foo", "bar")).consume(Stream::count)
         ).satisfies(ex -> assertThat(ex.getMessage()).contains("forcing error"));
         verify(closeable).close();
     }
@@ -96,7 +110,7 @@ class StreamGuardTest {
 
     @Test
     void constructionOfGuardShouldNotTriggerProductionOfResourceStreamIfNotConsumed() {
-        @SuppressWarnings("unchecked") final Supplier<AutoCloseable> resourceSupplier = mock(Supplier.class);
+        @SuppressWarnings("unchecked") final ExceptionAwareSupplier<AutoCloseable, Exception> resourceSupplier = mock(ExceptionAwareSupplier.class);
 
         assertThatCode(() -> guardResource(resourceSupplier, r -> {
             throw new IllegalArgumentException("in stream construction");
@@ -106,12 +120,12 @@ class StreamGuardTest {
 
     @Test
     void transformationOfGuardShouldNotTriggerProductionOfResourceStreamIfNotConsumed() {
-        @SuppressWarnings("unchecked") final Supplier<AutoCloseable> resourceSupplier = mock(Supplier.class);
+        @SuppressWarnings("unchecked") final ExceptionAwareSupplier<AutoCloseable, Exception> resourceSupplier = mock(ExceptionAwareSupplier.class);
 
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+        assertThatExceptionOfType(UncheckedException.class).isThrownBy(() ->
                 guardResource(resourceSupplier, r -> Stream.of("foo")).transform(s -> {
                     throw new IllegalArgumentException("in transformer");
-                }));
+                })).satisfies(ex -> assertThat(ex.getCause()).hasMessageContaining("in transformer"));
         verifyNoInteractions(resourceSupplier);
     }
 
@@ -119,9 +133,11 @@ class StreamGuardTest {
     @Test
     void resourceIsClosedWhenExceptionIsThrownDuringConsumptionWhenCreatingStreamFromResource() throws Exception {
         final AutoCloseable resource = mock(AutoCloseable.class);
-        assertThatThrownBy(() -> guardResource(() -> resource, r -> {
-            throw new IllegalStateException("breaking processing");
-        }).consume(Stream::count)).isInstanceOf(IllegalStateException.class);
+        assertThatExceptionOfType(UncheckedException.class)
+                .isThrownBy(() -> guardResource(() -> resource, r -> {
+                    throw new IllegalStateException("breaking processing");
+                }).consume(Stream::count))
+                .satisfies(ex -> assertThat(ex.getCause()).hasMessageContaining("breaking processing"));
         verify(resource).close();
     }
 
@@ -138,10 +154,11 @@ class StreamGuardTest {
     void resourceIsClosedWhenExceptionIsThrownDuringTransformation() throws Exception {
         final AutoCloseable resource = mock(AutoCloseable.class);
 
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+        assertThatExceptionOfType(UncheckedException.class).isThrownBy(() ->
                 guardResource(() -> resource, r -> Stream.of("foo")).transform(s -> s.map(r -> {
                     throw new IllegalArgumentException("in transform");
-                })).consume(Stream::count));
+                })).consume(Stream::count))
+                .satisfies(ex -> assertThat(ex.getCause()).hasMessageContaining("in transform"));
 
         verify(resource).close();
 

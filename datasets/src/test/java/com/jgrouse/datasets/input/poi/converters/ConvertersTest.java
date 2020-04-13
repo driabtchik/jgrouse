@@ -167,7 +167,7 @@ class ConvertersTest {
     }
 
 
-    private class Evaluator<T> {
+    private final class Evaluator<T> {
         private final Sheet sheet;
         private final int row;
         private final int column;

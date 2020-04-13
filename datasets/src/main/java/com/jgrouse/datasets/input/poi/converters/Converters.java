@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import static java.sql.JDBCType.*;
 
-public abstract class Converters {
+public final class Converters {
 
     private Converters() {
         //NO-OP
@@ -71,7 +71,7 @@ public abstract class Converters {
         }
     }
 
-    public static class NumericToLongConverter implements PoiTypeConverter<Long> {
+    public static final class NumericToLongConverter implements PoiTypeConverter<Long> {
         private final JDBCType handledType;
         private final long minValue;
         private final long maxValue;
