@@ -43,11 +43,14 @@ public class InputDataSetMetadataTest {
         assertThat(metadata.getElementsCount()).isEqualTo(2);
     }
 
-
     @Test
     public void testGetElement() {
         assertThat(metadata.getElement(0)).isSameAs(first);
     }
 
+    @Test
+    public void testStream() {
+        assertThat(metadata.stream()).containsExactly(first, second);
+    }
 
 }

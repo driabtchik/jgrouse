@@ -4,6 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static com.jgrouse.util.Assert.notEmpty;
 import static com.jgrouse.util.Assert.notNullElements;
@@ -33,5 +34,10 @@ public class DataSetMetadata {
     @NotNull
     public DataSetMetadataElement getElement(final int index) {
         return elements.get(index);
+    }
+
+
+    public Stream<DataSetMetadataElement> stream() {
+        return elements.stream();
     }
 }

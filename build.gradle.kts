@@ -77,7 +77,8 @@ subprojects {
                 val junitVer = "5.6.0"
                 val sl4jVer = "1.7.25"
                 implementation("javax.validation:validation-api:2.0.1.Final")
-                implementation("org.apache.commons:commons-lang3:3.9")
+                // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+                implementation("org.apache.commons:commons-lang3:3.10")
 
                 implementation("org.slf4j:slf4j-api:${sl4jVer}")
                 implementation("org.slf4j:log4j-over-slf4j:${sl4jVer}")
