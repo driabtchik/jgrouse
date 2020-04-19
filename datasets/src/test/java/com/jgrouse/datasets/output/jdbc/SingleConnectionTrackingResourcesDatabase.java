@@ -11,28 +11,32 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class TrackingResourcesDatabase extends JdbcDataSource {
-    private final List<Connection> knownConnections = new ArrayList<>();
+public class SingleConnectionTrackingResourcesDatabase extends JdbcDataSource {
     private final List<PreparedStatement> knownPreparedStatements = new ArrayList<>();
+    private Connection knownConnection;
+    private int openCount;
 
     @Override
     public Connection getConnection() throws SQLException {
-        final Connection connection = configureConnection();
-        knownConnections.add(connection);
-        return connection;
+        return configureConnection();
     }
 
     private Connection configureConnection() throws SQLException {
-        final Connection connection = spy(super.getConnection());
-        doAnswer(x -> {
-            knownConnections.remove(connection);
-            return x.callRealMethod();
-        }).when(connection).close();
-
-        when(connection.prepareStatement(anyString()))
-                .thenAnswer(x -> configurePreparedStatement(spy((PreparedStatement) x.callRealMethod())));
-
-        return connection;
+        if (knownConnection == null) {
+            knownConnection = spy(super.getConnection());
+            doAnswer(x -> {
+                openCount--;
+                if (openCount == 0) {
+                    x.callRealMethod();
+                    knownConnection = null;
+                }
+                return null;
+            }).when(knownConnection).close();
+            when(knownConnection.prepareStatement(anyString()))
+                    .thenAnswer(x -> configurePreparedStatement(spy((PreparedStatement) x.callRealMethod())));
+        }
+        openCount++;
+        return knownConnection;
     }
 
     private PreparedStatement configurePreparedStatement(final PreparedStatement preparedStatement) throws SQLException {
@@ -45,7 +49,7 @@ public class TrackingResourcesDatabase extends JdbcDataSource {
 
     public void assertNoLeaks() {
         assertThat(knownPreparedStatements).isEmpty();
-        assertThat(knownConnections).isEmpty();
+        assertThat(knownConnection).isNull();
     }
 
 }
