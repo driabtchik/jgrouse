@@ -1,18 +1,16 @@
-val artifactId = "jgrouse-datasets"
+val artifactId = "jgrouse-datasets-spring-test"
 
 ext["publishedArtifactId"] = artifactId
-ext["publishedArtifactName"] = "jGrouse Datasets"
-ext["publishedArtifactDesc"] = "jGrouse Datasets"
+ext["publishedArtifactName"] = "jGrouse Datasets for Spring Integration Testing"
+ext["publishedArtifactDesc"] = "jGrouse Datasets for Spring Integration Testing"
 
-apply (
-    from = "$rootDir/gradle/scripts/publishing.gradle.kts"
+apply(
+        from = "$rootDir/gradle/scripts/publishing.gradle.kts"
 )
 
 dependencies {
     "implementation"(project(":utils"))
-
-    implementation("org.apache.poi:poi")
-    implementation("org.apache.poi:poi-ooxml")
+    "implementation"(project(":datasets"))
 
     testImplementation("com.h2database:h2")
 
@@ -26,7 +24,7 @@ bintray {
     key = findProperty("bintrayKey")
     publish = true
     setPublications("default")
-    pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig>{
+    pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig> {
         repo = "jGrouse"
         name = artifactId
         userOrg = "jgrouse"

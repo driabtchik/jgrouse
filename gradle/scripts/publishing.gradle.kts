@@ -7,6 +7,7 @@ val Project.ext: ExtraPropertiesExtension
 val publishedArtifactId = ext["publishedArtifactId"]
 val publishedArtifactName = ext["publishedArtifactName"]
 val publishedArtifactDesc = ext["publishedArtifactDesc"]
+val componentsSource = if (ext.has("componentsSource")) ext["componentsSource"] else "java"
 
 
 plugins.withType<MavenPublishPlugin> {
@@ -26,7 +27,7 @@ plugins.withType<MavenPublishPlugin> {
                 groupId = project.group as String
                 artifactId = publishedArtifactId as String
                 version = project.version as String
-                from(components["java"])
+                from(components[componentsSource as String])
                 pom.withXml {
                     asNode().apply {
                         appendNode("name", publishedArtifactName)

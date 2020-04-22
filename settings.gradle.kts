@@ -1,4 +1,3 @@
 rootProject.name = "jgrouse"
 
-include ("utils", "datasets")
-
+include("platform", "utils", "datasets", "datasets-spring-test")

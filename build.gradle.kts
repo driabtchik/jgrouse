@@ -47,16 +47,67 @@ tasks.named("build") {
 }
 
 subprojects {
-    apply(plugin = "java-library")
-    apply(plugin = "java")
-    apply(plugin = "maven-publish")
 
-    apply(plugin = "jacoco")
+    apply(plugin = "maven-publish")
     apply(plugin = "com.jfrog.bintray")
     apply(plugin = "org.ajoberstar.grgit")
-    apply(plugin = "ru.vyarus.quality")
 
     ext["uploadAllowed"] = artifactUploadAllowed()
+    tasks.withType<Jar> {
+        archiveBaseName.set("jgrouse-${project.name}")
+    }
+
+    version = rootProject.scmVersion.version
+
+    if (this.name != "platform") {
+        setupLibrarySubprojects()
+    }
+
+    val rootArtifactsUpload = rootProject.tasks.getByName("artifactsUpload")
+    tasks.register("artifactsUpload") {
+        dependsOn("build")
+        if (ext["uploadAllowed"] as Boolean) {
+            finalizedBy(tasks.getByName("bintrayUpload"))
+            finalizedBy(tasks.getByName("publish"))
+        } else {
+            logger.info("No released artifacts are eligible for upload for ${project.name}")
+        }
+    }
+    rootArtifactsUpload.dependsOn("${project.name}:artifactsUpload")
+
+}
+
+tasks.named<TestReport>("testReport") {
+    destinationDir = file("$buildDir/reports/allTests")
+}
+
+
+tasks.register("ciBuild") {
+    dependsOn("artifactsUpload")
+}
+
+tasks.named("build") {
+    finalizedBy("jacocoRootTestReport")
+}
+
+tasks.named<JacocoReport>("jacocoRootTestReport") {
+    reports {
+        xml.isEnabled = true
+        xml.destination = file("${buildDir}/reports/jacoco/jacoco-jGrouse.xml")
+        html.isEnabled = true
+    }
+    executionData(fileTree(rootProject.rootDir).include("/*/build/jacoco/*.exec"))
+
+}
+
+fun Project.setupLibrarySubprojects() {
+    apply(plugin = "java-library")
+    apply(plugin = "java")
+
+
+    apply(plugin = "jacoco")
+    apply(plugin = "ru.vyarus.quality")
+
 
     quality {
         spotbugsVersion = "4.0.1"
@@ -64,6 +115,22 @@ subprojects {
         spotbugs = true
         codenarc = true
         pmd = true
+    }
+
+    dependencies {
+        implementation(platform(project(":platform")))
+        implementation("javax.validation:validation-api")
+        implementation("org.apache.commons:commons-lang3")
+
+        implementation("org.slf4j:slf4j-api")
+        implementation("org.slf4j:log4j-over-slf4j")
+
+
+        testImplementation("org.junit.jupiter:junit-jupiter-api")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testImplementation("org.assertj:assertj-core")
+        testImplementation("org.mockito:mockito-core")
     }
 
     plugins.withType<JavaLibraryPlugin> {
@@ -74,30 +141,11 @@ subprojects {
             withJavadocJar()
 
             dependencies {
-                val junitVer = "5.6.0"
-                val sl4jVer = "1.7.25"
-                implementation("javax.validation:validation-api:2.0.1.Final")
-                // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-                implementation("org.apache.commons:commons-lang3:3.10")
-
-                implementation("org.slf4j:slf4j-api:${sl4jVer}")
-                implementation("org.slf4j:log4j-over-slf4j:${sl4jVer}")
-
-
-                testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVer}")
-                testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVer}")
-                testImplementation("org.junit.jupiter:junit-jupiter:${junitVer}")
-                testImplementation("org.assertj:assertj-core:3.15.0")
-                testImplementation("org.mockito:mockito-core:3.3.0")
+                "api"(platform(project(":platform")))
             }
         }
     }
 
-    tasks.withType<Jar> {
-        archiveBaseName.set("jgrouse-${project.name}")
-    }
-
-    version = rootProject.scmVersion.version
 
     val rootTestReport = rootProject.tasks.getByName<TestReport>("testReport")
 
@@ -135,40 +183,4 @@ subprojects {
     val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
     rootJacocoReport.sourceSets(sourceSets.main.get())
     rootJacocoReport.dependsOn(project.tasks.build)
-
-    val rootArtifactsUpload = rootProject.tasks.getByName("artifactsUpload")
-    tasks.register("artifactsUpload") {
-        dependsOn("build")
-        if (ext["uploadAllowed"] as Boolean) {
-            finalizedBy(tasks.getByName("bintrayUpload"))
-            finalizedBy(tasks.getByName("publish"))
-        } else {
-            logger.info("No released artifacts are eligible for upload for ${project.name}")
-        }
-    }
-    rootArtifactsUpload.dependsOn("${project.name}:artifactsUpload")
-
-}
-
-tasks.named<TestReport>("testReport") {
-    destinationDir = file("$buildDir/reports/allTests")
-}
-
-
-tasks.register("ciBuild") {
-    dependsOn("artifactsUpload")
-}
-
-tasks.named("build") {
-    finalizedBy("jacocoRootTestReport")
-}
-
-tasks.named<JacocoReport>("jacocoRootTestReport") {
-    reports {
-        xml.isEnabled = true
-        xml.destination = file("${buildDir}/reports/jacoco/jacoco-jGrouse.xml")
-        html.isEnabled = true
-    }
-    executionData(fileTree(rootProject.rootDir).include("/*/build/jacoco/*.exec"))
-
 }
