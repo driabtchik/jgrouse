@@ -5,10 +5,7 @@ import com.jgrouse.datasets.input.DataSetMetadataFactory;
 import com.jgrouse.datasets.input.HeaderAwareInputDataSet;
 import com.jgrouse.util.codestyle.VisibleForTesting;
 import com.jgrouse.util.collections.BreakingSpliterator;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -26,6 +23,7 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
     private final CellValueExtractor cellValueExtractor;
     private final int metadataFieldCount;
     private final DataSetMetadata dataSetMetadata;
+    private final FormulaEvaluator formulaEvaluator;
 
 
     public PoiSheetInputDataSet(@NotNull final Sheet sheet,
@@ -37,6 +35,7 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
                         .create(this, this.sheet.getSheetName());
         this.metadataFieldCount = dataSetMetadata.getElementsCount();
         this.cellValueExtractor = cellValueExtractorFactory.create(dataSetMetadata);
+        this.formulaEvaluator = sheet.getWorkbook().getCreationHelper().createFormulaEvaluator();
     }
 
     @Override
@@ -72,6 +71,10 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
 
     private Object extractCellValue(final Row row, final int i) {
         final Cell cell = row.getCell(i, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-        return cellValueExtractor.getCellValue(cell);
+        if (cell.getCellType() != CellType.FORMULA) {
+            return cellValueExtractor.getCellValue(cell);
+        }
+        CellType formulaType = formulaEvaluator.evaluateFormulaCell(cell);
+        return cellValueExtractor.getCellValue(new CellProxy(cell, formulaType));
     }
 }

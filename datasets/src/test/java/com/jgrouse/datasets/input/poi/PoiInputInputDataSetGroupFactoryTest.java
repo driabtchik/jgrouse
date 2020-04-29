@@ -3,8 +3,7 @@ package com.jgrouse.datasets.input.poi;
 import com.jgrouse.datasets.input.InputDataSet;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PoiInputInputDataSetGroupFactoryTest {
@@ -19,8 +18,9 @@ class PoiInputInputDataSetGroupFactoryTest {
         final InputDataSet table1 = dataSetGroup.get("table1");
 
         assertThat(table1.stream()).usingRecursiveFieldByFieldElementComparator().containsExactly(
-                Arrays.asList(1L, "foo", 2.3),
-                Arrays.asList(2L, "bar", 4.5)
+                asList(1L, "foo", 2.3),
+                asList(2L, "bar", 4.5),
+                asList(13L, "barmoo", 13.5)
         );
     }
 

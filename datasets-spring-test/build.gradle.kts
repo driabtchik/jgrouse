@@ -9,8 +9,10 @@ apply(
 )
 
 dependencies {
-    "implementation"(project(":utils"))
-    "implementation"(project(":datasets"))
+    implementation(project(":utils"))
+    implementation(project(":datasets"))
+
+    implementation("org.springframework:spring-test")
 
     testImplementation("com.h2database:h2")
 

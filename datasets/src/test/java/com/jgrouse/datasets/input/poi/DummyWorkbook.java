@@ -7,9 +7,12 @@ import org.apache.poi.ss.usermodel.*;
 import java.io.OutputStream;
 import java.util.*;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
 public class DummyWorkbook implements Workbook {
     private final List<Sheet> sheets;
     private final Map<String, Sheet> sheetsByName;
+    private CreationHelper creationHelper = new DummtCreationHelper();
 
     public DummyWorkbook(final List<Sheet> sheets) {
         this.sheets = sheets;
@@ -18,6 +21,11 @@ public class DummyWorkbook implements Workbook {
             ((DummySheet) sheet).fromWorkbook(this);
             sheetsByName.put(sheet.getSheetName(), sheet);
         });
+    }
+
+    public DummyWorkbook withCreationHelper(final CreationHelper creationHelper) {
+        this.creationHelper = creationHelper;
+        return this;
     }
 
     @Override
@@ -274,7 +282,7 @@ public class DummyWorkbook implements Workbook {
 
     @Override
     public CreationHelper getCreationHelper() {
-        throw new UnsupportedOperationException();
+        return notNull(creationHelper);
     }
 
     @Override
