@@ -23,18 +23,22 @@ public class CellProxy implements Cell {
         this.cellType = cellType;
     }
 
+    @Override
     public CellType getCellType() {
         return cellType;
     }
 
+    @Override
     public int getColumnIndex() {
         return delegate.getColumnIndex();
     }
 
+    @Override
     public String getStringCellValue() {
         return delegate.getStringCellValue();
     }
 
+    @Override
     public Row getRow() {
         return delegate.getRow();
     }
@@ -51,14 +55,14 @@ public class CellProxy implements Cell {
 
     @Override
     public void setCellType(final CellType cellType) {
-        delegate.setCellType(cellType);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     @Removal(version = "4.2")
     @Deprecated
     public CellType getCellTypeEnum() {
-        return delegate.getCellTypeEnum();
+        return cellType;
     }
 
     @Override
@@ -75,32 +79,32 @@ public class CellProxy implements Cell {
 
     @Override
     public void setCellValue(final double value) {
-        delegate.setCellValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCellValue(final Date value) {
-        delegate.setCellValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCellValue(final Calendar value) {
-        delegate.setCellValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCellValue(final RichTextString value) {
-        delegate.setCellValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCellValue(final String value) {
-        delegate.setCellValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCellFormula(final String formula) throws FormulaParseException {
-        delegate.setCellFormula(formula);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -125,12 +129,12 @@ public class CellProxy implements Cell {
 
     @Override
     public void setCellValue(final boolean value) {
-        delegate.setCellValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setCellErrorValue(final byte value) {
-        delegate.setCellErrorValue(value);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -145,7 +149,7 @@ public class CellProxy implements Cell {
 
     @Override
     public void setCellStyle(final CellStyle style) {
-        delegate.setCellStyle(style);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -155,7 +159,7 @@ public class CellProxy implements Cell {
 
     @Override
     public void setAsActiveCell() {
-        delegate.setAsActiveCell();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -165,7 +169,7 @@ public class CellProxy implements Cell {
 
     @Override
     public void setCellComment(final Comment comment) {
-        delegate.setCellComment(comment);
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -175,7 +179,7 @@ public class CellProxy implements Cell {
 
     @Override
     public void removeCellComment() {
-        delegate.removeCellComment();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -185,12 +189,12 @@ public class CellProxy implements Cell {
 
     @Override
     public void setHyperlink(final Hyperlink link) {
-        delegate.setHyperlink(link);
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void removeHyperlink() {
-        delegate.removeHyperlink();
+        throw new UnsupportedOperationException();
     }
 
     @Override

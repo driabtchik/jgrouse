@@ -1,4 +1,4 @@
-package com.jgrouse.datasets.input.poi.converters;
+package com.jgrouse.datasets.input.poi;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 
 import java.util.Map;
 
+@SuppressWarnings("deprecated")
 public class DummyFormulaEvaluator implements FormulaEvaluator {
     @Override
     public void clearAllCachedResultValues() {
@@ -44,6 +45,7 @@ public class DummyFormulaEvaluator implements FormulaEvaluator {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public CellType evaluateFormulaCellEnum(final Cell cell) {
         return CellType.STRING;
     }

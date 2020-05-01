@@ -1,6 +1,5 @@
 package com.jgrouse.datasets.input.poi;
 
-import com.jgrouse.datasets.input.poi.converters.DummyFormulaEvaluator;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
