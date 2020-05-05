@@ -13,10 +13,6 @@ public class CellProxy implements Cell {
     private final Cell delegate;
     private final CellType cellType;
 
-    public CellProxy(final Cell delegate) {
-        this.delegate = delegate;
-        this.cellType = delegate.getCellType();
-    }
 
     public CellProxy(final Cell delegate, final CellType cellType) {
         this.delegate = delegate;
