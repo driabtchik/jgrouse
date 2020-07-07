@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.sql.JDBCType;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -75,6 +76,13 @@ public class PoiInputInputDataSetGroupTest {
         assertThat(dataSet).isNotNull();
     }
 
+    @Test
+    public void testGetNames() {
+        final PoiInputDataSetGroup poiDataSetGroup =
+                new PoiInputDataSetGroup(this::getSpreadsheetStream, datasetMetadataFactory, cellValueExtractorFactory);
+        assertThat(poiDataSetGroup.getDataSetNames()).containsExactly("table1", "table_other");
+    }
+
     private InputStream getSpreadsheetStream() {
         return this.getClass().getResourceAsStream("/com/jgrouse/datasets/input/poi/PoiDatasetFactoryTest.xlsx");
     }
@@ -94,6 +102,11 @@ public class PoiInputInputDataSetGroupTest {
                 new PoiInputDataSetGroup(() -> inputStream, datasetMetadataFactory, cellValueExtractorFactory) {
                     @Override
                     protected Workbook createWorkbook(final InputStream argStream) {
+                        throw new UnsupportedOperationException("for test");
+                    }
+
+                    @Override
+                    public List<String> getDataSetNames() {
                         throw new UnsupportedOperationException("for test");
                     }
                 };

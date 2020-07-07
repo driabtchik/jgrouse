@@ -6,5 +6,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface OutputDataSetGroup {
-    void save(List<InputDataSet> dataSets);
+    <T extends InputDataSet> void save(List<T> dataSets);
 }

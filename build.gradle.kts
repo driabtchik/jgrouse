@@ -1,3 +1,4 @@
+import org.gradle.api.JavaVersion.VERSION_11
 import org.gradle.api.JavaVersion.VERSION_1_8
 
 plugins {
@@ -103,12 +104,20 @@ tasks.named<JacocoReport>("jacocoRootTestReport") {
 fun Project.setupLibrarySubprojects() {
     apply(plugin = "java-library")
     apply(plugin = "java")
+    apply(plugin = "groovy")
 
 
     apply(plugin = "jacoco")
     apply(plugin = "ru.vyarus.quality")
 
 
+    setupQualityChecks()
+    setupSubprojectDependencies()
+    setupCompilationParameters()
+    setupTestWithCoverage()
+}
+
+fun Project.setupQualityChecks() {
     quality {
         spotbugsVersion = "4.0.1"
         checkstyle = false
@@ -116,37 +125,9 @@ fun Project.setupLibrarySubprojects() {
         codenarc = true
         pmd = true
     }
+}
 
-    dependencies {
-        implementation(platform(project(":platform")))
-        implementation("javax.validation:validation-api")
-        implementation("org.apache.commons:commons-lang3")
-
-        implementation("org.slf4j:slf4j-api")
-        implementation("org.slf4j:log4j-over-slf4j")
-
-
-        testImplementation("org.junit.jupiter:junit-jupiter-api")
-        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-        testImplementation("org.junit.jupiter:junit-jupiter")
-        testImplementation("org.assertj:assertj-core")
-        testImplementation("org.mockito:mockito-core")
-    }
-
-    plugins.withType<JavaLibraryPlugin> {
-        extensions.configure<JavaPluginExtension> {
-            sourceCompatibility = VERSION_1_8
-            targetCompatibility = VERSION_1_8
-            withSourcesJar()
-            withJavadocJar()
-
-            dependencies {
-                "api"(platform(project(":platform")))
-            }
-        }
-    }
-
-
+fun Project.setupTestWithCoverage() {
     val rootTestReport = rootProject.tasks.getByName<TestReport>("testReport")
 
     tasks.named<Test>("test") {
@@ -183,4 +164,43 @@ fun Project.setupLibrarySubprojects() {
     val rootJacocoReport = rootProject.tasks.getByName<JacocoReport>("jacocoRootTestReport")
     rootJacocoReport.sourceSets(sourceSets.main.get())
     rootJacocoReport.dependsOn(project.tasks.build)
+}
+
+fun Project.setupCompilationParameters() {
+    plugins.withType<JavaLibraryPlugin> {
+        extensions.configure<JavaPluginExtension> {
+            sourceCompatibility = VERSION_11
+            targetCompatibility = VERSION_11
+            withSourcesJar()
+            withJavadocJar()
+
+            dependencies {
+                "api"(platform(project(":platform")))
+            }
+        }
+    }
+
+    tasks.withType<GroovyCompile>().configureEach {
+        options.isIncremental = true
+    }
+}
+
+fun Project.setupSubprojectDependencies() {
+    dependencies {
+        implementation(platform(project(":platform")))
+        implementation("javax.validation:validation-api")
+        implementation("org.apache.commons:commons-lang3")
+
+        implementation("org.slf4j:slf4j-api")
+        implementation("ch.qos.logback:logback-core")
+        implementation("ch.qos.logback:logback-classic")
+
+
+        testImplementation("org.junit.jupiter:junit-jupiter-api")
+        testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+        testImplementation("org.junit.jupiter:junit-jupiter")
+        testImplementation("org.assertj:assertj-core")
+        testImplementation("org.mockito:mockito-core")
+        testImplementation("org.codehaus.groovy:groovy-all")
+    }
 }

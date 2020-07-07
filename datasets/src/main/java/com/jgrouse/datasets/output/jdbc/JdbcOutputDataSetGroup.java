@@ -27,7 +27,7 @@ public class JdbcOutputDataSetGroup implements OutputDataSetGroup {
     }
 
     @Override
-    public void save(final List<InputDataSet> dataSets) {
+    public <T extends InputDataSet> void save(final List<T> dataSets) {
 
         try (Connection connection = dataSource.getConnection()) {
             dataSets.forEach(ids -> {

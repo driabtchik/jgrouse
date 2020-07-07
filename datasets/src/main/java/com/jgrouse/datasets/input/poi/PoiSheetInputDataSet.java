@@ -4,7 +4,6 @@ import com.jgrouse.datasets.DataSetMetadata;
 import com.jgrouse.datasets.input.DataSetMetadataFactory;
 import com.jgrouse.datasets.input.HeaderAwareInputDataSet;
 import com.jgrouse.util.codestyle.VisibleForTesting;
-import com.jgrouse.util.collections.BreakingSpliterator;
 import org.apache.poi.ss.usermodel.*;
 
 import javax.validation.constraints.NotNull;
@@ -41,7 +40,8 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
     @Override
     public List<String> getHeaders() {
         final Row row = notNull(sheet.getRow(0), () -> "Missing header row in sheet " + sheet.getSheetName());
-        return StreamSupport.stream(new BreakingSpliterator<>(row.spliterator(), this::isCellPresent), false)
+        return StreamSupport.stream(row.spliterator(), false)
+                .takeWhile(this::isCellPresent)
                 .map(Cell::getStringCellValue)
                 .collect(Collectors.toList());
     }
@@ -53,7 +53,8 @@ public class PoiSheetInputDataSet implements HeaderAwareInputDataSet {
     @Override
     @NotNull
     public Stream<List<Object>> stream() {
-        return StreamSupport.stream(new BreakingSpliterator<>(sheet.spliterator(), Objects::nonNull), false)
+        return StreamSupport.stream(sheet.spliterator(), false)
+                .takeWhile(Objects::nonNull)
                 .skip(1)
                 .map(this::extractRow);
     }

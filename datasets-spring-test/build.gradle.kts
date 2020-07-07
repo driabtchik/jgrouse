@@ -13,7 +13,10 @@ dependencies {
     implementation(project(":datasets"))
 
     implementation("org.springframework:spring-test")
+    implementation("org.springframework:spring-context")
+    implementation("org.springframework:spring-tx")
 
+    testImplementation("org.springframework:spring-jdbc")
     testImplementation("com.h2database:h2")
 
 }

@@ -40,6 +40,15 @@ dependencies {
         api("org.mockito:mockito-core:3.3.0")
 
         api("com.h2database:h2:1.4.200")
+
+        api("org.codehaus.groovy:groovy-all:3.0.3")
+
+        val logbackVer = "1.2.3"
+        api("ch.qos.logback:logback-core:${logbackVer}")
+        api("ch.qos.logback:logback-classic:${logbackVer}")
+
+
+
     }
 }
 
